@@ -1,29 +1,30 @@
 #include "cameraCalibration.h"
+
 using namespace cv;
 using namespace std;
 
-		Mat frame;
-		vector<Mat> AllImages;
-		vector< vector< vector <Point2f> > > allCorners; // vector of all corners detected in all images 
-		vector<vector<int> > allIds;	// all ids of all images 
-		Mat cameraMatrix, distCoeffs; //Camera Params
-		vector <Mat> rvecs, tvecs;  //Used in calibration
-		double repError;	// used in calibration 
-		Size imgSize;	
-		int calibrationFlags; //dont especify any CalibrationFlag 
-		float aspectRatio;   // Used in calibration 
-		int imageCount;
-		String output_path;
 
-	// Constructor 
-		CameraCalibration::CameraCalibration(FileStorage resultFile)
+	//Capture the images to calibration. 
+	void CameraCalibration::capture()
+	{
+		Ptr<aruco::Dictionary> mDictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
+		Ptr<aruco::CharucoBoard> mCharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,mDictionary);
+		namedWindow ("WebCam", WINDOW_AUTOSIZE);
+		VideoCapture cap(0);
+		while (int i=0 < 10000)
 		{
-
+			Mat frame;
+			cap.read(frame);
+			imshow("WebCam", frame);
+			i++;
 		}
-		static bool loadCameraCalibration (String resultFile, Mat& cameraMatrix, Mat& distanceCoeff); // Read .txt file
-		bool startCalibration(String path);
-		static bool saveCameraParams(const string &filename, Size imageSize, float aspectRatio, int flags, 
-								 const Mat &cameraMatrix, const Mat &distCoeffs, double totalAvgErr, 
-								 vector <Mat> &rvecs, vector <Mat> &tvecs);
-		void save_images_to_folder(vector<Mat> Images, string ImagesPath);
+	}
+	
+	bool CameraCalibration::calibrate(String path)
+	{
+			// detect and draw Charuco markers in webcam
+		namedWindow ("WebCam", WINDOW_AUTOSIZE);
+		VideoCapture cap(0);
+	}
+
 
