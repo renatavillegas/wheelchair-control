@@ -9,19 +9,25 @@ using namespace std;
 	{
 		Ptr<aruco::Dictionary> mDictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
 		Ptr<aruco::CharucoBoard> mCharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,mDictionary);
-		// namedWindow ("WebCam", WINDOW_AUTOSIZE);
-		// VideoCapture cap(0);
-		// while (true)
-		// {
-		// 	Mat frame;
-		// 	cap.read(frame);
-		// 	imshow("WebCam", frame);
-		// }
+		namedWindow ("WebCam", WINDOW_AUTOSIZE);
+		VideoCapture cap(0);
+		Mat frame;
+		while (true)
+		{
+		 	cap>>frame;
+		 	imshow("WebCam", frame);
+		 	char key = (char)waitKey(10);
+		 	if(key == 'q')
+		 	{
+		 		destroyWindow("WebCam");
+		 		return;
+		 	}
+		 }
 	}
 	
 	bool CameraCalibration::calibrate(String path)
 	{
-			// detect and draw Charuco markers in webcam
+		// detect and draw Charuco markers in webcam
 		namedWindow ("WebCam", WINDOW_AUTOSIZE);
 		VideoCapture cap(0);
 	}

@@ -31,18 +31,6 @@ int main (int argc,char *argv[])
 	cout << "Hello cam\n";
 	Mat frame;
 	VideoCapture cap;
-	cap.open(0);
-	namedWindow("Webcam", CV_WINDOW_AUTOSIZE);
-	if (!cap.isOpened())
-	{
-		cout << "Could not open the camera \n";
-	}
-	while (true)
-	{
-		cap >> frame;
-	 	imshow("WebCam", frame);
-	 	char key = (char)waitKey(10);
-	}
-	//cam.capture();
+	cam.capture();
 	return 0;
 }
