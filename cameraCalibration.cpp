@@ -9,15 +9,14 @@ using namespace std;
 	{
 		Ptr<aruco::Dictionary> mDictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
 		Ptr<aruco::CharucoBoard> mCharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,mDictionary);
-		namedWindow ("WebCam", WINDOW_AUTOSIZE);
-		VideoCapture cap(0);
-		while (int i=0 < 10000)
-		{
-			Mat frame;
-			cap.read(frame);
-			imshow("WebCam", frame);
-			i++;
-		}
+		// namedWindow ("WebCam", WINDOW_AUTOSIZE);
+		// VideoCapture cap(0);
+		// while (true)
+		// {
+		// 	Mat frame;
+		// 	cap.read(frame);
+		// 	imshow("WebCam", frame);
+		// }
 	}
 	
 	bool CameraCalibration::calibrate(String path)
