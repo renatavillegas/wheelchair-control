@@ -26,11 +26,28 @@ int main (int argc,char *argv[])
 	//Start the camera traking - 1 thread
 	//Start the User interface - 1 thread
 	//Start the communication with Vrep - 1 thread.
-	//CameraCalibration cam; 
-	CameraCalibration cam; 
-	cout << "Hello cam\n";
-	Mat frame;
-	VideoCapture cap;
-	cam.capture();
+	//CameraCalibration cam;
+	ifstream inFile (argv[1]);
+	if (!inFile)
+	{
+		cout << "There's no calibration file.\n"
+		<<"Do you want to start Camera Calibration?\n"
+		<<"Press y to calibrate the Camera\n"
+		<<"Press n to cancel\n";  
+		char r;
+		cin>>r;
+		if (r=='n')
+			return 0;
+		if (r=='y')
+		{
+			cout<< "Welcome to Camera Calibration \n"
+			<< "Press c to capture image\n"
+			<< "Press q to close the capture and start calibration\n";
+			CameraCalibration cam; 
+			Mat frame;
+			VideoCapture cap;
+			cam.capture();
+		}
+	} 
 	return 0;
 }
