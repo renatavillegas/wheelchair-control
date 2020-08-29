@@ -1,7 +1,7 @@
 //Main class. This class will be used to initialize all the system. 
 
 #include <stdio.h>
-#include "cameraCalibration.h"
+#include "cameraCalibration.cpp"
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
@@ -44,8 +44,7 @@ int main (int argc,char *argv[])
 			<< "Press c to capture image\n"
 			<< "Press q to close the capture and start calibration\n";
 			CameraCalibration cam; 
-			Mat frame;
-			VideoCapture cap;
+			cam.show_info();
 			cam.capture();
 		}
 	} 

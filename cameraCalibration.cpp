@@ -4,6 +4,16 @@ using namespace cv;
 using namespace std;
 
 
+	// print some info to the user before calibration. 
+
+	void CameraCalibration::show_info()
+	{
+		cout<<"Welcome to camera calibration.\n"
+			<<"INFO:To calibrate using a ChArUco board," 
+			<<"it is necessary to detect the board from different viewpoints.\n"
+			<<"Press s to save the webcam image to use on calibration.\n"
+			<<"After taking more than 5 files, press x to stop capturing and start calibration.\n";
+	}
 	//Capture the images to calibration. 
 	void CameraCalibration::capture()
 	{

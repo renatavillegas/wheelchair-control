@@ -62,6 +62,7 @@ class CameraCalibration
 								 vector <Mat> &rvecs, vector <Mat> &tvecs);
 		void save_images_to_folder(vector<Mat> Images, string ImagesPath);
 		Mat drawMarkers(Mat frame);
+		void show_info();
 
 };
 
