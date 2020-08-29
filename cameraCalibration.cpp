@@ -2,7 +2,6 @@
 
 using namespace cv;
 using namespace std;
-	
 	//Webcam frame
 	Mat frame;
 	//Vector of images to calibrate
@@ -26,7 +25,7 @@ using namespace std;
 	// Number of images salved 
 	int mimageCount=0;
 	// Path to resultFile
-	String moutput_path = "/home/renata/Documents/IC/CalibrationImages/";
+	String moutput_path = ROOT_PATH;
 	// detectorParameters of the arUco markers
 	Ptr<aruco::DetectorParameters> mdetectorParameters = aruco::DetectorParameters::create();
 	// vectors of points of the makers 
@@ -44,7 +43,7 @@ using namespace std;
 			<<"INFO:To calibrate using a ChArUco board," 
 			<<"it is necessary to detect the board from different viewpoints.\n"
 			<<"Press s to save the webcam image to use on calibration.\n"
-			<<"After taking more than 5 files, press x to stop capturing and start calibration.\n";
+			<<"After taking more than 5 pictures, press q to stop capturing and start calibration.\n";
 	}
 	//Capture the images to calibration. 
 	void CameraCalibration::capture()
@@ -115,7 +114,7 @@ using namespace std;
 
 	void CameraCalibration::save_images_to_folder(string ImagesPath)
 	{
-		for(int i=1; i< mAllImages.size(); i++)
+		for(int i=0; i< mAllImages.size(); i++)
 		{
 			String file_name =  ImagesPath + string("image") + to_string(i) + string(".png");
 			bool result = imwrite(file_name, mAllImages[i]); 

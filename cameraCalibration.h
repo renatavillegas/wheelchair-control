@@ -16,7 +16,7 @@
 #include <iostream>
 #include <ctime>
 
-#define ROOT_PATH = "/home/renata/Documents/IC/CalibrationImages/";
+#define ROOT_PATH "/home/renata/Documents/IC/CalibrationImages/";
 using namespace cv;
 using namespace std;
 
@@ -51,7 +51,7 @@ class CameraCalibration
 			int calibrationFlags=0; //dont especify any CalibrationFlag 
 			float aspectRatio=0;   // Used in calibration 
 			int imageCount=0;
-			String output_path = "";
+			String output_path = ROOT_PATH + "resultFile.txt";
 			Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
 			Ptr<aruco::CharucoBoard> CharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,dictionary);
 		};
