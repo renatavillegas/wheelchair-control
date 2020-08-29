@@ -26,14 +26,16 @@ using namespace std;
 	// Number of images salved 
 	int mimageCount=0;
 	// Path to resultFile
-	String moutput_path = "";
+	String moutput_path = "/home/renata/Documents/IC/CalibrationImages/";
 	// detectorParameters of the arUco markers
 	Ptr<aruco::DetectorParameters> mdetectorParameters = aruco::DetectorParameters::create();
 	// vectors of points of the makers 
 	vector< vector < Point2f > > mcorners, mrejected;
 	// vector to save the ids of the markers of one image
 	vector <int> mids;
+	// Dictionary of markers 
 	Ptr<aruco::Dictionary> mdictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
+	// Charuco board
 	Ptr<aruco::CharucoBoard> mcharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,mdictionary);
 	// print some info to the user before calibration. 
 	void CameraCalibration::show_info()
@@ -55,8 +57,13 @@ using namespace std;
 		 	char key = (char)waitKey(20);
 		 	if(key == 'q')
 		 	{
+		 		save_images_to_folder(mAllImages, moutput_path);
 		 		destroyWindow("WebCam");
 		 		return;
+		 	}
+		 	if(key == 's')
+		 	{
+		 		add_image(frame);
 		 	}
 		 	imshow("WebCam", drawMarkers(frame));
 
@@ -89,3 +96,30 @@ using namespace std;
 			cout << "NULL frame\n";
 		return frame;
 	}
+
+	void CameraCalibration::add_image(Mat frame)
+	{
+		cout << "ids.size= "<< mids.size();
+		cout <<" corners.size= "<< mcorners.size()<< endl;
+		if((int)mcorners.size()>4) // minimum of identifiable markers 
+		{
+			cout << "Saved frame\n AllImagesSize=" << mAllImages.size();
+			mAllImages.push_back (frame);
+			mallCorners.push_back(mcorners);
+			mallIds.push_back(mids);
+			mimgSize = frame.size ();
+
+		}
+	}
+
+	void CameraCalibration::save_images_to_folder(vector<Mat> Images, string ImagesPath)
+	{
+		for(int i=1; i< Images.size(); i++)
+		{
+			String file_name =  ImagesPath + string("image") + to_string(i) + string(".png");
+			bool result = imwrite(file_name, Images[i]); 
+			if (!result)
+				cout << "Image save fail. \n";
+		}
+	}
+

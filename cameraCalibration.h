@@ -16,6 +16,7 @@
 #include <iostream>
 #include <ctime>
 
+#define ROOT_PATH = "/home/renata/Documents/IC/CalibrationImages/";
 using namespace cv;
 using namespace std;
 
@@ -60,9 +61,11 @@ class CameraCalibration
 		bool saveCameraParams(const string &filename, Size imageSize, float aspectRatio, int flags, 
 								 const Mat &cameraMatrix, const Mat &distCoeffs, double totalAvgErr, 
 								 vector <Mat> &rvecs, vector <Mat> &tvecs);
-		void save_images_to_folder(vector<Mat> Images, string ImagesPath);
 		Mat drawMarkers(Mat frame);
 		void show_info();
+		void add_image(Mat frame);
+		void save_images_to_folder(vector<Mat> Images, string ImagesPath);
+
 
 };
 

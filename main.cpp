@@ -40,9 +40,6 @@ int main (int argc,char *argv[])
 			return 0;
 		if (r=='y')
 		{
-			cout<< "Welcome to Camera Calibration \n"
-			<< "Press c to capture image\n"
-			<< "Press q to close the capture and start calibration\n";
 			CameraCalibration cam; 
 			cam.show_info();
 			cam.capture();
