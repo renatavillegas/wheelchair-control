@@ -7,21 +7,21 @@ using namespace std;
 	//Capture the images to calibration. 
 	void CameraCalibration::capture()
 	{
-		Ptr<aruco::Dictionary> mDictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
-		Ptr<aruco::CharucoBoard> mCharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,mDictionary);
 		namedWindow ("WebCam", WINDOW_AUTOSIZE);
 		VideoCapture cap(0);
 		Mat frame;
+		Mat image;
 		while (true)
 		{
 		 	cap>>frame;
-		 	imshow("WebCam", frame);
-		 	char key = (char)waitKey(10);
+		 	char key = (char)waitKey(20);
 		 	if(key == 'q')
 		 	{
 		 		destroyWindow("WebCam");
 		 		return;
 		 	}
+		 	imshow("WebCam", drawMarkers(frame));
+
 		 }
 	}
 	
@@ -46,18 +46,27 @@ using namespace std;
 
 	Mat CameraCalibration::drawMarkers(Mat frame)
 	{
-		Ptr<aruco::DetectorParameters> detectorParameters = aruco::DetectorParameters::create(); 
-		vector< vector < Point2f > > corners, rejected;
-		vector <int> ids;
-		aruco::detectMarkers(frame, dictionary, corners, ids, detectorParameters, rejected);
-		aruco::refineDetectedMarkers(frame, CharucoBoard, corners, ids, rejected);
-		Mat currentCharucoCorners, currentCharucoIds;
-		if (ids.size()>0)
+		Ptr<aruco::DetectorParameters> mdetectorParameters = aruco::DetectorParameters::create(); 
+		vector< vector < Point2f > > mcorners, mrejected;
+		vector <int> mids;
+		Ptr<aruco::Dictionary> mDictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
+		Ptr<aruco::CharucoBoard> mCharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,mDictionary);
+		if (!frame.empty())
 		{
-			aruco::interpolateCornersCharuco(corners, ids, frame, CharucoBoard, currentCharucoCorners, currentCharucoIds);
-			aruco::drawDetectedMarkers(frame,corners);
+			aruco::detectMarkers(frame, mDictionary, mcorners, mids, mdetectorParameters, mrejected);
+			aruco::refineDetectedMarkers(frame, mCharucoBoard, mcorners, mids, mrejected);
+			Mat mcurrentCharucoCorners, mcurrentCharucoIds;
+			if (mids.size()>0)
+			{
+				aruco::interpolateCornersCharuco(mcorners, mids, frame, mCharucoBoard, 
+												 mcurrentCharucoCorners, mcurrentCharucoIds);
+				aruco::drawDetectedMarkers(frame,mcorners);
+			}
+			if (mcurrentCharucoCorners.total()>0)
+				aruco::drawDetectedCornersCharuco(frame,mcurrentCharucoCorners,mcurrentCharucoIds);
+			return frame;
 		}
-		if (currentCharucoCorners.total()>0)
-			aruco::drawDetectedCornersCharuco(frame,currentCharucoCorners,currentCharucoIds);
+		else 
+			cout << "NULL frame\n";
 		return frame;
 	}
