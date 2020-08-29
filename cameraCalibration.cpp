@@ -57,7 +57,7 @@ using namespace std;
 		 	char key = (char)waitKey(20);
 		 	if(key == 'q')
 		 	{
-		 		save_images_to_folder(mAllImages, moutput_path);
+		 		save_images_to_folder(moutput_path);
 		 		destroyWindow("WebCam");
 		 		return;
 		 	}
@@ -103,21 +103,22 @@ using namespace std;
 		cout <<" corners.size= "<< mcorners.size()<< endl;
 		if((int)mcorners.size()>4) // minimum of identifiable markers 
 		{
-			cout << "Saved frame\n AllImagesSize=" << mAllImages.size();
+			
 			mAllImages.push_back (frame);
 			mallCorners.push_back(mcorners);
 			mallIds.push_back(mids);
 			mimgSize = frame.size ();
+			cout << "Saved frame\n AllImagesSize=" << mAllImages.size()<< endl;
 
 		}
 	}
 
-	void CameraCalibration::save_images_to_folder(vector<Mat> Images, string ImagesPath)
+	void CameraCalibration::save_images_to_folder(string ImagesPath)
 	{
-		for(int i=1; i< Images.size(); i++)
+		for(int i=1; i< mAllImages.size(); i++)
 		{
 			String file_name =  ImagesPath + string("image") + to_string(i) + string(".png");
-			bool result = imwrite(file_name, Images[i]); 
+			bool result = imwrite(file_name, mAllImages[i]); 
 			if (!result)
 				cout << "Image save fail. \n";
 		}
