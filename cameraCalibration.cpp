@@ -168,38 +168,47 @@ using namespace std;
 		}
 	}
 
-bool CameraCalibration::saveCameraParams()
-{
-	FileStorage fs(moutput_path, FileStorage::WRITE);
-    cout << "fopen\n";
-    if(!fs.isOpened())
-        return false;
-    time_t tt;
-    time(&tt);
-    struct tm *t2 = localtime(&tt);
-    char buf[1024];
-    strftime(buf, sizeof(buf) - 1, "%c", t2);
+	bool CameraCalibration::saveCameraParams()
+	{
+		FileStorage fs(moutput_path, FileStorage::WRITE);
+	    cout << "fopen\n";
+	    if(!fs.isOpened())
+	        return false;
+	    time_t tt;
+	    time(&tt);
+	    struct tm *t2 = localtime(&tt);
+	    char buf[1024];
+	    strftime(buf, sizeof(buf) - 1, "%c", t2);
 
-    fs << "calibration_time" << buf;
-    fs << "image_width" << mimgSize.width;
-    fs << "image_height" << mimgSize.height;
+	    fs << "calibration_time" << buf;
+	    fs << "image_width" << mimgSize.width;
+	    fs << "image_height" << mimgSize.height;
 
-    if(mcalibrationFlags & CALIB_FIX_ASPECT_RATIO) fs << "aspectRatio" << maspectRatio;
+	    if(mcalibrationFlags & CALIB_FIX_ASPECT_RATIO) fs << "aspectRatio" << maspectRatio;
 
-    if(mcalibrationFlags != 0) {
-        sprintf(buf, "flags: %s%s%s%s",
-                mcalibrationFlags & CALIB_USE_INTRINSIC_GUESS ? "+use_intrinsic_guess" : "",
-                mcalibrationFlags & CALIB_FIX_ASPECT_RATIO ? "+fix_aspectRatio" : "",
-                mcalibrationFlags & CALIB_FIX_PRINCIPAL_POINT ? "+fix_principal_point" : "",
-                mcalibrationFlags & CALIB_ZERO_TANGENT_DIST ? "+zero_tangent_dist" : "");
-    }
-    fs << "flags" << mcalibrationFlags;
-    fs << "camera_matrix" << cameraMatrix;
-    fs << "cameraMatrixRows" << cameraMatrix.rows;
-    fs << "cameraMatrixCols" << cameraMatrix.cols;
-    fs << "distortion_coefficients" << mdistCoeffs;
-    fs << "avg_reprojection_error" << mrepError;
-    fs << "rotation vectors" << mrvecs;
-    fs << "translation vectors" << mtvecs;
-    return true;
-}
+	    if(mcalibrationFlags != 0) {
+	        sprintf(buf, "flags: %s%s%s%s",
+	                mcalibrationFlags & CALIB_USE_INTRINSIC_GUESS ? "+use_intrinsic_guess" : "",
+	                mcalibrationFlags & CALIB_FIX_ASPECT_RATIO ? "+fix_aspectRatio" : "",
+	                mcalibrationFlags & CALIB_FIX_PRINCIPAL_POINT ? "+fix_principal_point" : "",
+	                mcalibrationFlags & CALIB_ZERO_TANGENT_DIST ? "+zero_tangent_dist" : "");
+	    }
+	    fs << "flags" << mcalibrationFlags;
+	    fs << "camera_matrix" << cameraMatrix;
+	    fs << "cameraMatrixRows" << cameraMatrix.rows;
+	    fs << "cameraMatrixCols" << cameraMatrix.cols;
+	    fs << "distortion_coefficients" << mdistCoeffs;
+	    fs << "avg_reprojection_error" << mrepError;
+	    fs << "rotation vectors" << mrvecs;
+	    fs << "translation vectors" << mtvecs;
+	    return true;
+	}
+	void CameraCalibration::set_output_path(String output_path)
+	{
+		moutput_path = output_path;
+		return;
+	}
+	String CameraCalibration::get_output_path()
+	{
+		return moutput_path;
+	}	

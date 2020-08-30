@@ -71,6 +71,10 @@ class CameraCalibration
 		void add_image(Mat image);
 		// save the images to an output folder
 		void save_images_to_folder(string ImagesPath);
+		// get-set output path 
+		void set_output_path(String output_path);
+		String get_output_path();
+		bool loadCameraCalibration (string name, Mat& cameraMatrix, Mat& distanceCoeff);
 };
 
 #endif /* CAMERACALIBRATION_H */

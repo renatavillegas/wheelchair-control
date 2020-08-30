@@ -45,5 +45,12 @@ int main (int argc,char *argv[])
 			cam.calibrate();
 		}
 	} 
+	else 
+	{
+		CameraCalibration cam;
+		cam.set_output_path(argv[1]) ; 
+		cout << cam.get_output_path() << endl;
+
+	}
 	return 0;
 }
