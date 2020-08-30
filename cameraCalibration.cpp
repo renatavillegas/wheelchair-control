@@ -25,7 +25,8 @@ using namespace std;
 	// Number of images salved 
 	int mimageCount=0;
 	// Path to resultFile
-	String moutput_path = ROOT_PATH;
+	String ROOT_PATH = "/home/renata/Documents/IC/CalibrationImages/";
+	const String moutput_path = ROOT_PATH + "result.txt";
 	// detectorParameters of the arUco markers
 	Ptr<aruco::DetectorParameters> mdetectorParameters = aruco::DetectorParameters::create();
 	// vectors of points of the makers 
@@ -36,6 +37,8 @@ using namespace std;
 	Ptr<aruco::Dictionary> mdictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
 	// Charuco board
 	Ptr<aruco::CharucoBoard> mcharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,mdictionary);
+	//all corner and all ids used to calibrate
+	vector <Mat> mallCharucoCorners, mallCharucoIds;
 	// print some info to the user before calibration. 
 	void CameraCalibration::show_info()
 	{
@@ -43,7 +46,8 @@ using namespace std;
 			<<"INFO:To calibrate using a ChArUco board," 
 			<<"it is necessary to detect the board from different viewpoints.\n"
 			<<"Press s to save the webcam image to use on calibration.\n"
-			<<"After taking more than 5 pictures, press q to stop capturing and start calibration.\n";
+			<<"After taking more than 5 pictures, press x to stop capturing and start calibration.\n"
+			<<"Press q to cancel calibration.\n";
 	}
 	//Capture the images to calibration. 
 	void CameraCalibration::capture()
@@ -56,22 +60,54 @@ using namespace std;
 		 	char key = (char)waitKey(20);
 		 	if(key == 'q')
 		 	{
-		 		save_images_to_folder(moutput_path);
+		 		save_images_to_folder(ROOT_PATH);
 		 		destroyWindow("WebCam");
+		 		cout << "Calibration canceled.\n";
 		 		return;
 		 	}
-		 	if(key == 's')
+		 	if(key == 's' )
 		 	{
 		 		add_image(frame);
+		 	}
+		 	if(key == 'x')
+		 	{
+		 		save_images_to_folder(ROOT_PATH);
+		 		destroyWindow("WebCam");
+		 		cout << "Starting calibration.\n";
+		 		calibrate();
 		 	}
 		 	imshow("WebCam", drawMarkers(frame));
 
 		 }
 	}
 	
-	bool CameraCalibration::calibrate(String path)
+	bool CameraCalibration::calibrate()
 	{
-
+		if ((int)mAllImages.size()<5)
+		{
+			cout<< "Not enough images to calibrate\n";
+			return false;
+		}
+		// prepare data for Charuco calibration
+		int nImages = (int)mallCorners.size();
+		mallCharucoCorners.reserve(nImages);
+		mallCharucoIds.reserve(nImages);
+		for(int i=0; i< nImages; i++)
+		{
+			Mat currentCharucoCorners, currentCharucoIds;
+			aruco::interpolateCornersCharuco(mallCorners[i], mallIds[i], mAllImages[i], 
+											 mcharucoBoard, currentCharucoCorners, 
+											 currentCharucoIds, cameraMatrix, mdistCoeffs);
+			mallCharucoCorners.push_back(currentCharucoCorners);
+			mallCharucoIds.push_back(currentCharucoIds);
+		}
+		repError= aruco::calibrateCameraCharuco(mallCharucoCorners,mallCharucoIds,mcharucoBoard,mimgSize,
+												cameraMatrix, mdistCoeffs, mrvecs, mtvecs, mcalibrationFlags);
+		bool saveOk = saveCameraParams();
+		if (saveOk)
+			cout << "See results in " << moutput_path << endl;
+			return true;
+		return false;
 	}
 
 	Mat CameraCalibration::drawMarkers(Mat frame)
@@ -103,7 +139,7 @@ using namespace std;
 		if((int)mcorners.size()>4) // minimum of identifiable markers 
 		{
 			
-			mAllImages.push_back (frame);
+			mAllImages.push_back (drawMarkers(frame));
 			mallCorners.push_back(mcorners);
 			mallIds.push_back(mids);
 			mimgSize = frame.size ();
@@ -123,3 +159,38 @@ using namespace std;
 		}
 	}
 
+bool CameraCalibration::saveCameraParams()
+{
+	FileStorage fs(moutput_path, FileStorage::WRITE);
+    cout << "fopen\n";
+    if(!fs.isOpened())
+        return false;
+    time_t tt;
+    time(&tt);
+    struct tm *t2 = localtime(&tt);
+    char buf[1024];
+    strftime(buf, sizeof(buf) - 1, "%c", t2);
+
+    fs << "calibration_time" << buf;
+    fs << "image_width" << mimgSize.width;
+    fs << "image_height" << mimgSize.height;
+
+    if(mcalibrationFlags & CALIB_FIX_ASPECT_RATIO) fs << "aspectRatio" << maspectRatio;
+
+    if(mcalibrationFlags != 0) {
+        sprintf(buf, "flags: %s%s%s%s",
+                mcalibrationFlags & CALIB_USE_INTRINSIC_GUESS ? "+use_intrinsic_guess" : "",
+                mcalibrationFlags & CALIB_FIX_ASPECT_RATIO ? "+fix_aspectRatio" : "",
+                mcalibrationFlags & CALIB_FIX_PRINCIPAL_POINT ? "+fix_principal_point" : "",
+                mcalibrationFlags & CALIB_ZERO_TANGENT_DIST ? "+zero_tangent_dist" : "");
+    }
+    fs << "flags" << mcalibrationFlags;
+    fs << "camera_matrix" << cameraMatrix;
+    fs << "cameraMatrixRows" << cameraMatrix.rows;
+    fs << "cameraMatrixCols" << cameraMatrix.cols;
+    fs << "distortion_coefficients" << mdistCoeffs;
+    fs << "avg_reprojection_error" << mrepError;
+    fs << "rotation vectors" << mrvecs;
+    fs << "translation vectors" << mtvecs;
+    return true;
+}
