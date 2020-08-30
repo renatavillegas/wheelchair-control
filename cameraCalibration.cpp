@@ -39,6 +39,29 @@ using namespace std;
 	Ptr<aruco::CharucoBoard> mcharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,mdictionary);
 	//all corner and all ids used to calibrate
 	vector <Mat> mallCharucoCorners, mallCharucoIds;
+
+	// ---------------------Getter and setter -------------------------
+	void CameraCalibration::set_output_path(String output_path)
+	{
+		moutput_path = output_path;
+		return;
+	}
+	String CameraCalibration::get_output_path()
+	{
+		return moutput_path;
+	}
+
+	bool CameraCalibration::loadCameraCalibration ()
+	{
+		FileStorage fs (moutput_path, FileStorage::READ);
+		if (!fs.isOpened())
+			return false;
+		fs["camera_matrix"] >> cameraMatrix;
+		fs["distortion_coefficients"] >> mdistCoeffs;
+		return true;
+	}	
+	// -----------------------------------------------------------------
+
 	// print some info to the user before calibration. 
 	void CameraCalibration::show_info()
 	{
@@ -203,12 +226,4 @@ using namespace std;
 	    fs << "translation vectors" << mtvecs;
 	    return true;
 	}
-	void CameraCalibration::set_output_path(String output_path)
-	{
-		moutput_path = output_path;
-		return;
-	}
-	String CameraCalibration::get_output_path()
-	{
-		return moutput_path;
-	}	
+

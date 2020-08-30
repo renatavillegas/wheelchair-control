@@ -74,7 +74,7 @@ class CameraCalibration
 		// get-set output path 
 		void set_output_path(String output_path);
 		String get_output_path();
-		bool loadCameraCalibration (string name, Mat& cameraMatrix, Mat& distanceCoeff);
+		bool loadCameraCalibration ();
 };
 
 #endif /* CAMERACALIBRATION_H */

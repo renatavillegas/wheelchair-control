@@ -48,9 +48,13 @@ int main (int argc,char *argv[])
 	else 
 	{
 		CameraCalibration cam;
-		cam.set_output_path(argv[1]) ; 
-		cout << cam.get_output_path() << endl;
-
+		cam.set_output_path(argv[1]); 
+		if (!cam.loadCameraCalibration())
+		{
+			cout <<"Could not load the calibration params.\n"
+		}
 	}
+	//now we have to start the thread to find the marker and follow it.
+	//and the tread to start simulation and follow it. 
 	return 0;
 }
