@@ -26,7 +26,7 @@ using namespace std;
 	int mimageCount=0;
 	// Path to resultFile
 	String ROOT_PATH = "/home/renata/Documents/IC/CalibrationImages/";
-	const String moutput_path = ROOT_PATH + "result.txt";
+	String moutput_path = ROOT_PATH + "result.txt";
 	// detectorParameters of the arUco markers
 	Ptr<aruco::DetectorParameters> mdetectorParameters = aruco::DetectorParameters::create();
 	// vectors of points of the makers 
@@ -50,7 +50,7 @@ using namespace std;
 			<<"Press q to cancel calibration.\n";
 	}
 	//Capture the images to calibration. 
-	void CameraCalibration::capture()
+	void CameraCalibration::calibrate()
 	{
 		namedWindow ("WebCam", WINDOW_AUTOSIZE);
 		VideoCapture cap(0);
@@ -72,16 +72,25 @@ using namespace std;
 		 	if(key == 'x')
 		 	{
 		 		save_images_to_folder(ROOT_PATH);
-		 		destroyWindow("WebCam");
 		 		cout << "Starting calibration.\n";
-		 		calibrate();
+		 		if (start_calibration())
+		 		{
+		 			destroyWindow("WebCam");
+		 			return;
+		 		}
+		 		else
+		 		{
+		 			cout << "Calibration Failed.\n"
+		 				 << "Try again or press q to cancel.\n";
+		 		}
+
 		 	}
 		 	imshow("WebCam", drawMarkers(frame));
 
 		 }
 	}
 	
-	bool CameraCalibration::calibrate()
+	bool CameraCalibration::start_calibration()
 	{
 		if ((int)mAllImages.size()<5)
 		{

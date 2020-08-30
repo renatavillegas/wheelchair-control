@@ -42,7 +42,7 @@ int main (int argc,char *argv[])
 		{
 			CameraCalibration cam; 
 			cam.show_info();
-			cam.capture();
+			cam.calibrate();
 		}
 	} 
 	return 0;

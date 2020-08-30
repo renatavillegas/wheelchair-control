@@ -55,13 +55,21 @@ class CameraCalibration
 			Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
 			Ptr<aruco::CharucoBoard> CharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,dictionary);
 		};
-		bool loadCameraCalibration (String resultFile, Mat& cameraMatrix, Mat& distanceCoeff); // Read .txt file
-		bool calibrate();
-		void capture();
+		// Read .txt file
+		bool loadCameraCalibration (String resultFile, Mat& cameraMatrix, Mat& distanceCoeff); 
+		// start calibration
+		bool start_calibration();
+		// capture the images to start_calibration
+		void calibrate();
+		// save the calibration result on a file
 		bool saveCameraParams();
+		// draw markers on the webcam view
 		Mat drawMarkers(Mat image);
+		// some info displayed before start calibration
 		void show_info();
+		// add the images captured on calibration
 		void add_image(Mat image);
+		// save the images to an output folder
 		void save_images_to_folder(string ImagesPath);
 };
 
