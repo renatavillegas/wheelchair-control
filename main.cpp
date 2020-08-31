@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include "cameraCalibration.cpp"
-
+#include "charucomarker.cpp"
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
 #include <opencv2/highgui.hpp>
@@ -47,13 +47,17 @@ int main (int argc,char *argv[])
 	} 
 	else 
 	{
+		//Load the calibration params 
 		CameraCalibration cam;
 		cam.set_output_path(argv[1]); 
 		if (!cam.loadCameraCalibration())
 		{
-			cout <<"Could not load the calibration params.\n"
+			cout <<"Could not load the calibration params.\n";
 		}
+		// Start the maker tracking 
+
 	}
+
 	//now we have to start the thread to find the marker and follow it.
 	//and the tread to start simulation and follow it. 
 	return 0;
