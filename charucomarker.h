@@ -31,9 +31,10 @@ class CharucoMarker
 {
 private:
 	thread t1;
+	void find_marker();
 	void hello_thread();
 public:
-
+	void show_info();
 	void start_thread();
 };
 

@@ -54,7 +54,9 @@ int main (int argc,char *argv[])
 		{
 			cout <<"Could not load the calibration params.\n";
 		}
-		// Start the maker tracking 
+		// Start the maker tracking
+		CharucoMarker marker; 
+		marker.show_info(); 
 
 	}
 
