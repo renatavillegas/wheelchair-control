@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <thread>
+#include "cameraCalibration.h"
 
 using namespace cv;
 using namespace std;
@@ -31,11 +32,20 @@ class CharucoMarker
 {
 private:
 	thread t1;
-	void find_marker();
+	//Webcam frame
+	Mat frame;
+	VideoCapture cap();
+	CameraCalibration mcameraParams;
+	void show();
 	void hello_thread();
 public:
 	void show_info();
 	void start_thread();
+	CharucoMarker(CameraCalibration params)
+	{
+		mcameraParams= params;
+	}
+	CameraCalibration get_cameraParams();
 };
 
 #endif /* CHARUCOMARKER_H */
