@@ -56,10 +56,11 @@ int main (int argc,char *argv[])
 		}
 		// Start the maker tracking
 		CharucoMarker marker(cam); 
-		marker.show_info();
+		marker.show_info();		
 		marker.start_thread();
-		while(true)
-		{}
+		while(marker.get_status())
+		{		
+		}
 	}
 
 	//now we have to start the thread to find the marker and follow it.

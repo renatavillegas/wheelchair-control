@@ -39,6 +39,8 @@ private:
 	CameraCalibration mcameraParams;
 	// Marker IDs on image
 	vector<int> markerIds;
+	// bool to handle cancel events
+	bool status;
 
 	//Thread function
 	void show();
@@ -48,7 +50,10 @@ public:
 	CharucoMarker(CameraCalibration params)
 	{
 		mcameraParams= params;
+		status = true; 
 	}
+	thread get_thread();
+	bool get_status();
 	void show_info();
 	void start_thread();
 	CameraCalibration get_cameraParams();

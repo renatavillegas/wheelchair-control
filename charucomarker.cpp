@@ -3,13 +3,16 @@
 #include "cameraCalibration.h"
 
 CameraCalibration mcameraParams;
-
+bool mstatus=true; 
 //get-set
 CameraCalibration CharucoMarker::get_cameraParams()
 {
 	return mcameraParams;
 }
-
+bool CharucoMarker::get_status()
+{
+	return mstatus;
+}
 // Display some info to user
 void CharucoMarker::show_info()
 {
@@ -32,14 +35,14 @@ void CharucoMarker::show()
 	VideoCapture cap(0);
 	while(true)
 	{
+		if(char key = (char)waitKey(20)=='q')
+		{
+			destroyWindow("WebCam");
+			cout << "Camera Closed.\n";
+			mstatus=false; 
+			return;
+		}
 	 	cap>>frame;
-		char key = (char)waitKey(30);
-		if(key == 'q')
-	 	{
-	 		destroyWindow("WebCam");
-	 		cout << "Calibration canceled.\n";
-	 		return;
-	 	}
 		imshow("WebCam", mcameraParams.drawMarkers(frame));
 	}
 }
@@ -48,6 +51,7 @@ void CharucoMarker::start_thread()
 	thread mt1(&CharucoMarker::show, this);
 	mt1.detach();
 }
+
 
 
 
