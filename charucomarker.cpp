@@ -14,11 +14,11 @@ bool CharucoMarker::get_status()
 	return mstatus;
 }
 // Display some info to user
-void CharucoMarker::show_info()
+void CharucoMarker::initial_info()
 {
 	cout << "Each door have an unique CharucoMarker "
 	<<"that will be used to define from position from the chair."
-	<<"Press q to cancel the search.";
+	<<"Press q to cancel the search."<<endl;
 }
 
 void CharucoMarker::hello_thread()
@@ -31,6 +31,7 @@ void CharucoMarker::hello_thread()
 }
 void CharucoMarker::show()
 {
+	initial_info();
 	namedWindow ("WebCam", WINDOW_AUTOSIZE);
 	VideoCapture cap(0);
 	while(true)

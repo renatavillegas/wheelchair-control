@@ -54,7 +54,7 @@ public:
 	}
 	thread get_thread();
 	bool get_status();
-	void show_info();
+	void initial_info();
 	void start_thread();
 	CameraCalibration get_cameraParams();
 };
