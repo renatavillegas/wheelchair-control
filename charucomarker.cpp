@@ -33,19 +33,21 @@ void CharucoMarker::show()
 	while(true)
 	{
 	 	cap>>frame;
-		 char key = (char)waitKey(20);
-		 if(key == 'q')
+		char key = (char)waitKey(30);
+		if(key == 'q')
 	 	{
 	 		destroyWindow("WebCam");
 	 		cout << "Calibration canceled.\n";
 	 		return;
 	 	}
-		imshow("WebCam", drawMarkers(frame));
+		imshow("WebCam", mcameraParams.drawMarkers(frame));
 	}
 }
 void CharucoMarker::start_thread()
 {
-	thread mt1(&CharucoMarker::hello_thread, this);
+	thread mt1(&CharucoMarker::show, this);
 	mt1.detach();
 }
+
+
 

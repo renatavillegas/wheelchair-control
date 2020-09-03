@@ -44,11 +44,14 @@ private:
 	void show();
 	void hello_thread();
 public:
-
+// Constructor
+	CharucoMarker(CameraCalibration params)
+	{
+		mcameraParams= params;
+	}
 	void show_info();
 	void start_thread();
-	CharucoMarker(CameraCalibration params);
-	
+	CameraCalibration get_cameraParams();
 };
 
 #endif /* CHARUCOMARKER_H */

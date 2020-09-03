@@ -57,8 +57,9 @@ int main (int argc,char *argv[])
 		// Start the maker tracking
 		CharucoMarker marker(cam); 
 		marker.show_info();
-		cout<< "test marker" << marker.get_cameraParams().get_output_path(); 
-
+		marker.start_thread();
+		while(true)
+		{}
 	}
 
 	//now we have to start the thread to find the marker and follow it.
