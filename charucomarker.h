@@ -31,21 +31,24 @@ using namespace std;
 class CharucoMarker
 {
 private:
+	//Used to show the webcam image
 	thread t1;
 	//Webcam frame
 	Mat frame;
-	VideoCapture cap();
+	//Camera Parameters
 	CameraCalibration mcameraParams;
+	// Marker IDs on image
+	vector<int> markerIds;
+
+	//Thread function
 	void show();
 	void hello_thread();
 public:
+
 	void show_info();
 	void start_thread();
-	CharucoMarker(CameraCalibration params)
-	{
-		mcameraParams= params;
-	}
-	CameraCalibration get_cameraParams();
+	CharucoMarker(CameraCalibration params);
+	
 };
 
 #endif /* CHARUCOMARKER_H */
