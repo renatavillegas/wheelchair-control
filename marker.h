@@ -1,7 +1,6 @@
 #ifndef MARKER_H // include guard
 #define MARKER_H
 #define GLM_ENABLE_EXPERIMENTAL
-
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
 #include <opencv2/highgui.hpp>
@@ -32,12 +31,8 @@ using namespace cv;
 using namespace std;
 using namespace glm;
 
-extern "C" {
-    #include "/home/renata/V-REP_PRO_EDU_V3_5_0_Linux/programming/remoteApi/extApi.c"
-     #include "/home/renata/V-REP_PRO_EDU_V3_5_0_Linux/programming/remoteApi/extApiPlatform.c"
-	#include "/home/renata/V-REP_PRO_EDU_V3_5_0_Linux/programming/common/shared_memory.c"
-}
-
+class Marker
+{
 private:
 	int ID;
 	Vec3d position, angle;
@@ -45,12 +40,24 @@ private:
 
 
 public: 
-	int get_id(int ID);
-	void set_id();
+	int get_id();
+	void set_id(int id);
 	Vec3d get_position();
-	void set_position(Vec3d position)
+	void set_position(Vec3d position);
 	quat get_quaternion();
-	void set_quaternion(quat quartenion);
+	void set_quaternion(quat q);
+	void set_quaternion(Vec3d angle);
+	vec3 Vec3dtoVec3 (Vec3d source);
+	void fprintf();
 
+	//constructors
+	Marker(int id, Vec3d pos, Vec3d ang)
+	{
+		ID = id;
+		position = pos;
+		angle = ang;
+		set_quaternion(angle);
+	}
+};
 
 #endif /* MARKER_H */

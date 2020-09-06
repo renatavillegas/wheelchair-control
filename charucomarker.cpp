@@ -1,9 +1,11 @@
 #include "charucomarker.h"
 #include <unistd.h>
 #include "cameraCalibration.h"
+#include "marker.h"
 
 CameraCalibration mcameraParams;
 bool mstatus=true; 
+vector<int> markerIds;
 //get-set
 CameraCalibration CharucoMarker::get_cameraParams()
 {
