@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "cameraCalibration.cpp"
 #include "charucomarker.cpp"
+#include "marker.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
 #include <opencv2/highgui.hpp>
