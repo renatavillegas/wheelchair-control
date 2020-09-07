@@ -50,7 +50,7 @@ void Camera::startCamera()
 	}
 }
 
-Mat Camera::draw_markers(Mat frame)
+void Camera::draw_markers(Mat frame)
 {
 	if (!frame.empty())
 	{
@@ -66,12 +66,11 @@ Mat Camera::draw_markers(Mat frame)
 		}
 		if (currentCharucoCorners.total()>0)
 			aruco::drawDetectedCornersCharuco(frame,currentCharucoCorners,currentCharucoIds);
-		return frame;
 	}
 	else 
 		cout << "NULL frame\n";
 }
-Mat Camera::add_marker(Mat frame)
+void Camera::add_marker(Mat frame)
 {
 	vector<Vec3d> AngleVector;
 	vector<Vec3d> DistanceVector;
@@ -89,7 +88,6 @@ Mat Camera::add_marker(Mat frame)
 			new_marker.print();
 		}
 	}
-	return frame;
 }
 void Camera::open()
 {
@@ -100,7 +98,7 @@ void Camera::info()
 {
 	cout<< "Now the chair is in manual control state." <<endl 
 	<<"The user can move through the room." << endl
-	<<"If any door were found on the way," 
+	<<"If any door were found on the way " 
 	<<"the user will be asked if he wants to open or keep moving."<< endl
 	<<"Press q to cancel the moviment and close the camera." << endl;  
 }

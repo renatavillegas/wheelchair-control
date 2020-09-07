@@ -58,8 +58,8 @@ private:
 	bool status;
 public: 
 	void open();
-	Mat draw_markers(Mat frame);
-	Mat add_marker(Mat frame);
+	void draw_markers(Mat frame);
+	void add_marker(Mat frame);
 	bool get_status();
 	void info();
 
