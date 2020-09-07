@@ -19,24 +19,33 @@ Mat currentCharucoCorners, currentCharucoIds;
 
 Mat image;
 
+bool status = true;
+
 float arucoSquareDimension =0.12f;
 
-void Camera::open()
+
+bool Camera::get_status()
+{
+	return status;
+}
+
+
+void Camera::startCamera()
 {
 	VideoCapture cap(0);
 	namedWindow ("WebCam", WINDOW_AUTOSIZE);
 	while(true)
 	{
-		if(char key = (char)waitKey(30)=='q')
+		char key = (char)waitKey(30);
+		if(key == 'q')
 		{
 			destroyWindow("WebCam");
 			cout << "Camera Closed.\n";
-			mstatus=false; 
+			status=false; 
 			return;
 		}
 	 	cap>>image;
 	 	draw_markers(image);
-
 		imshow("WebCam", image);
 	}
 }
@@ -82,18 +91,8 @@ Mat Camera::add_marker(Mat frame)
 	}
 	return frame;
 }
-
-// void markerTracking (int ID, vector<vector<Point2f>> markerCorners, float arucoSquareDimension, Mat cameraMatrix, Mat distanceCoeff,
-// 					 vector<Vec3d> *RotationVector, vector<Vec3d> *TranslateVector, vector<int> markerIds, Mat frame)
-// {
-// 	vector<Vec3d> AngleVector;
-// 	vector<Vec3d> DistanceVector;
-// 	int i = searchID (markerIds, ID);
-// 	if (i>=0)
-// 	{
-// 		aruco:: estimatePoseSingleMarkers(markerCorners, arucoSquareDimension, params.get_cameraMatrix(), 
-// 	 								  params.get_distanceCoeff(), AngleVector, DistanceVector);
-// 		aruco::drawAxis(frame, cameraMatrix, distanceCoeff, AngleVector[i],  DistanceVector[i], 0.01f);
-// 	}
-// 	*RotationVector = AngleVector;
-// 	*TranslateVector = DistanceVector;
+void Camera::open()
+{
+	thread mt1(&Camera::startCamera, this);
+	mt1.detach();
+}

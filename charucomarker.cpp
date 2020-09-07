@@ -14,7 +14,7 @@ CameraCalibration CharucoMarker::get_cameraParams()
 bool CharucoMarker::get_status()
 {
 	return mstatus;
-}
+}	
 // Display some info to user
 void CharucoMarker::initial_info()
 {

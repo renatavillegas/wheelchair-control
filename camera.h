@@ -52,11 +52,17 @@ private:
 	Mat currentCharucoCorners, currentCharucoIds;
 	// size of the markers
 	float arucoSquareDimension;
-
+	//Used to show the webcam image
+	thread t1;
+	void startCamera();
+	bool status;
 public: 
 	void open();
 	Mat draw_markers(Mat frame);
 	Mat add_marker(Mat frame);
+	bool get_status();
+
+
 	Camera()
 	{
 		arucoSquareDimension= 0.12f;
@@ -65,6 +71,7 @@ public:
 		{
 			cout << "Could not read the camera parameters." << endl;
 		}
+		status = true;
 	}
 	void close();
 };
