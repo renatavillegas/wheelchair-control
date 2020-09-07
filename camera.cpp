@@ -96,3 +96,11 @@ void Camera::open()
 	thread mt1(&Camera::startCamera, this);
 	mt1.detach();
 }
+void Camera::info()
+{
+	cout<< "Now the chair is in manual control state." <<endl 
+	<<"The user can move through the room." << endl
+	<<"If any door were found on the way," 
+	<<"the user will be asked if he wants to open or keep moving."<< endl
+	<<"Press q to cancel the moviment and close the camera." << endl;  
+}

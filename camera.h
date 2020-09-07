@@ -61,6 +61,7 @@ public:
 	Mat draw_markers(Mat frame);
 	Mat add_marker(Mat frame);
 	bool get_status();
+	void info();
 
 
 	Camera()

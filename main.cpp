@@ -58,6 +58,7 @@ int main (int argc,char *argv[])
 		}
 		// Start the maker tracking
 		Camera cam;
+		cam.info();
 		cam.open();
 		while(cam.get_status())
 		{		
