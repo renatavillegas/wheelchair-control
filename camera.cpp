@@ -27,7 +27,7 @@ void Camera::open()
 	namedWindow ("WebCam", WINDOW_AUTOSIZE);
 	while(true)
 	{
-		if(char key = (char)waitKey(20)=='q')
+		if(char key = (char)waitKey(30)=='q')
 		{
 			destroyWindow("WebCam");
 			cout << "Camera Closed.\n";
@@ -74,13 +74,10 @@ Mat Camera::add_marker(Mat frame)
 		if(!Marker::is_in_list(detectedMarkers, ids[i]))
 		{
 			Marker new_marker(ids[i], DistanceVector[i], AngleVector[i]);
-			cout<< "ID = "<< ids[i]
-				<< "DistanceVector = " << DistanceVector[i]
-				<< "AngleVector=" << AngleVector[i];
 			aruco::drawAxis(frame, params.get_cameraMatrix(), params.get_distCoeffs(), 
 						new_marker.get_angle(),  new_marker.get_position(), 0.01f);
 			detectedMarkers.push_back(new_marker);
-			cout<<"Add marker ID: "<< new_marker.get_id() << endl;
+			new_marker.print();
 		}
 	}
 	return frame;

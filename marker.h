@@ -50,7 +50,7 @@ public:
 	void set_quaternion(quat q);
 	void set_quaternion(Vec3d angle);
 	vec3 Vec3dtoVec3 (Vec3d source);
-	void fprintf();
+	void print();
 	static bool is_in_list(vector<Marker> marker_list, int markerID);
 
 	//constructors

@@ -42,22 +42,22 @@ int main (int argc,char *argv[])
 			return 0;
 		if (r=='y')
 		{
-			CameraCalibration cam; 
-			cam.show_info();
-			cam.calibrate();
+			CameraCalibration params; 
+			params.show_info();
+			params.calibrate();
 		}
 	} 
 	else 
 	{
 		//Load the calibration params 
-		CameraCalibration cam;
-		cam.set_output_path(argv[1]); 
-		if (!cam.loadCameraCalibration())
+		CameraCalibration params;
+		params.set_output_path(argv[1]); 
+		if (!params.loadCameraCalibration())
 		{
 			cout <<"Could not load the calibration params.\n";
 		}
 		// Start the maker tracking
-		CharucoMarker marker(cam); 
+		CharucoMarker marker(params); 
 		marker.start_thread();
 		while(marker.get_status())
 		{		

@@ -66,6 +66,7 @@ public:
 			cout << "Could not read the camera parameters." << endl;
 		}
 	}
+	void close();
 };
 
 #endif /* MARKER_H */
