@@ -56,11 +56,15 @@ private:
 public: 
 	void open();
 	Mat draw_markers(Mat frame);
-	void get_position();
+	Mat add_marker(Mat frame);
 	Camera()
 	{
 		arucoSquareDimension= 0.12f;
 		detectorParameters = aruco::DetectorParameters::create();
+		if(!params.loadCameraCalibration())
+		{
+			cout << "Could not read the camera parameters." << endl;
+		}
 	}
 };
 

@@ -76,6 +76,8 @@ class CameraCalibration
 		//getters-setters
 		Ptr<aruco::Dictionary> get_dictionary();
 		Ptr<aruco::CharucoBoard> get_charucoBoard();
+		Mat get_cameraMatrix();
+		Mat get_distCoeffs();
 		void set_output_path(String output_path);
 		String get_output_path();
 

@@ -22,6 +22,14 @@ void Marker::set_position(Vec3d pos)
 {
 	position = pos;
 }
+Vec3d Marker::get_angle()
+{
+	return angle;
+}
+void Marker::set_angle(Vec3d orientation)
+{
+	angle = orientation;
+}
 quat Marker::get_quaternion()
 {
 	return quaternion;
@@ -43,6 +51,15 @@ vec3 Marker::Vec3dtoVec3 (Vec3d source)
 		dest[i] = source(i);
 	}
 	return dest;
+}
+bool Marker::is_in_list(vector<Marker> marker_list, int markerID)
+{
+	for(int i =0; i<marker_list.size(); i++)
+	{
+		if (markerID == marker_list[i].get_id())
+			return true;
+	}
+	return false;
 }
 void fprintf()
 {

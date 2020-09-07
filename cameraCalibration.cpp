@@ -59,7 +59,14 @@ using namespace std;
 	{
 		return mcharucoBoard;
 	}
-
+	Mat CameraCalibration::get_cameraMatrix()
+	{
+		return cameraMatrix;
+	}
+	Mat CameraCalibration::get_distCoeffs()
+	{
+		return mdistCoeffs;
+	}
 	bool CameraCalibration::loadCameraCalibration ()
 	{
 		FileStorage fs (moutput_path, FileStorage::READ);

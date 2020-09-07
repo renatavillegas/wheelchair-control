@@ -44,11 +44,14 @@ public:
 	void set_id(int id);
 	Vec3d get_position();
 	void set_position(Vec3d position);
+	Vec3d get_angle();
+	void set_angle(Vec3d angle);
 	quat get_quaternion();
 	void set_quaternion(quat q);
 	void set_quaternion(Vec3d angle);
 	vec3 Vec3dtoVec3 (Vec3d source);
 	void fprintf();
+	static bool is_in_list(vector<Marker> marker_list, int markerID);
 
 	//constructors
 	Marker(int id, Vec3d pos, Vec3d ang)
