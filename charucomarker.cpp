@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include "cameraCalibration.h"
 #include "marker.h"
-
+#include "camera.h"
 CameraCalibration mcameraParams;
 bool mstatus=true; 
 vector<int> markerIds;
@@ -34,20 +34,8 @@ void CharucoMarker::hello_thread()
 void CharucoMarker::show()
 {
 	initial_info();
-	namedWindow ("WebCam", WINDOW_AUTOSIZE);
-	VideoCapture cap(0);
-	while(true)
-	{
-		if(char key = (char)waitKey(20)=='q')
-		{
-			destroyWindow("WebCam");
-			cout << "Camera Closed.\n";
-			mstatus=false; 
-			return;
-		}
-	 	cap>>frame;
-		imshow("WebCam", mcameraParams.drawMarkers(frame));
-	}
+	Camera cam;
+	cam.open();
 }
 void CharucoMarker::start_thread()
 {

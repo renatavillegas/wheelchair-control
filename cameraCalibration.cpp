@@ -34,7 +34,7 @@ using namespace std;
 	// vector to save the ids of the markers of one image
 	vector <int> mids;
 	// Dictionary of markers 
-	Ptr<aruco::Dictionary> mdictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
+	Ptr<aruco::Dictionary> mdictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50);
 	// Charuco board
 	Ptr<aruco::CharucoBoard> mcharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,mdictionary);
 	//all corner and all ids used to calibrate
@@ -49,6 +49,15 @@ using namespace std;
 	String CameraCalibration::get_output_path()
 	{
 		return moutput_path;
+	}
+	Ptr<aruco::Dictionary> CameraCalibration::get_dictionary()
+	{
+		return mdictionary;
+	}
+		
+	Ptr<aruco::CharucoBoard> CameraCalibration::get_charucoBoard()
+	{
+		return mcharucoBoard;
 	}
 
 	bool CameraCalibration::loadCameraCalibration ()

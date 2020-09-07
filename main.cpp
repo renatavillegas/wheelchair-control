@@ -4,6 +4,7 @@
 #include "cameraCalibration.cpp"
 #include "charucomarker.cpp"
 #include "marker.cpp"
+#include "camera.cpp"
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
 #include <opencv2/highgui.hpp>

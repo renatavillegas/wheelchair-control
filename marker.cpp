@@ -1,6 +1,5 @@
 #include "marker.h"
 
-//https://www.youtube.com/watch?v=Tb7yhXrPfC4
 int ID;
 Vec3d position, angle;
 quat quaternion;
@@ -47,9 +46,5 @@ vec3 Marker::Vec3dtoVec3 (Vec3d source)
 }
 void fprintf()
 {
-	cout<<"Marker: \n"
-		<<"id = " << ID << endl
-		<<"Position = " << position <<endl
-		<<"Rotation Angles= " << angle <<endl
-		<<"Quaternion = " << quaternion <<endl;
+	cout << "Marker ID = " << ID;
 }

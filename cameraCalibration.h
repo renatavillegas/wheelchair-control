@@ -35,7 +35,7 @@ class CameraCalibration
 		int imageCount;
 		String output_path;
 		Ptr<aruco::Dictionary> dictionary;
-		Ptr<aruco::CharucoBoard> CharucoBoard;
+		Ptr<aruco::CharucoBoard> charucoBoard;
 
 	public:
 		CameraCalibration(){
@@ -53,7 +53,7 @@ class CameraCalibration
 			String ROOT_PATH = "/home/renata/Documents/IC/CalibrationImages/";
 			String output_path = ROOT_PATH + "resultFile.txt";
 			Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50 );
-			Ptr<aruco::CharucoBoard> CharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,dictionary);
+			Ptr<aruco::CharucoBoard> charucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,dictionary);
 		};
 		// Read .txt file
 		bool loadCameraCalibration (String resultFile, Mat& cameraMatrix, Mat& distanceCoeff); 
@@ -71,10 +71,14 @@ class CameraCalibration
 		void add_image(Mat image);
 		// save the images to an output folder
 		void save_images_to_folder(string ImagesPath);
-		// get-set output path 
+		// load the paramters of the calibration
+		bool loadCameraCalibration ();
+		//getters-setters
+		Ptr<aruco::Dictionary> get_dictionary();
+		Ptr<aruco::CharucoBoard> get_charucoBoard();
 		void set_output_path(String output_path);
 		String get_output_path();
-		bool loadCameraCalibration ();
+
 };
 
 #endif /* CAMERACALIBRATION_H */
