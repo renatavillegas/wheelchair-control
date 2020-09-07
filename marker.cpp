@@ -61,9 +61,10 @@ bool Marker::is_in_list(vector<Marker> marker_list, int markerID)
 	}
 	return false;
 }
+
 void Marker::print()
 {
-	cout << "Marker ID = " << ID <<endl
+	cout <<"Marker ID = " << ID <<endl
 		<< "DistanceVector = " << position << endl
 		<< "AngleVector=" << angle << endl;
 }

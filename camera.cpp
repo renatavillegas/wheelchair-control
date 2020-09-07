@@ -21,6 +21,8 @@ Mat image;
 
 bool status = true;
 
+bool ready= false;
+
 float arucoSquareDimension =0.12f;
 
 
@@ -28,8 +30,14 @@ bool Camera::get_status()
 {
 	return status;
 }
-
-
+bool Camera::is_ready()
+{
+	return ready;
+}
+void Camera::set_ready(bool state)
+{
+	ready = state;
+}
 void Camera::startCamera()
 {
 	VideoCapture cap(0);
@@ -43,6 +51,10 @@ void Camera::startCamera()
 			cout << "Camera Closed.\n";
 			status=false; 
 			return;
+		}
+		if(key == 'y')
+		{
+			ready = true;
 		}
 	 	cap>>image;
 	 	draw_markers(image);
@@ -74,7 +86,6 @@ void Camera::add_marker(Mat frame)
 {
 	vector<Vec3d> AngleVector;
 	vector<Vec3d> DistanceVector;
-
 	for(int i =0; i<ids.size();i++)
 	{
 		aruco:: estimatePoseSingleMarkers(markerCorners, arucoSquareDimension, params.get_cameraMatrix(), 
@@ -85,6 +96,9 @@ void Camera::add_marker(Mat frame)
 			aruco::drawAxis(frame, params.get_cameraMatrix(), params.get_distCoeffs(), 
 						new_marker.get_angle(),  new_marker.get_position(), 0.01f);
 			detectedMarkers.push_back(new_marker);
+			cout << "There is a new door on the way."<<endl
+				 << "If you want to open it, please press y." <<endl
+				 << "If you don't, just continue moving." <<endl;	
 			new_marker.print();
 		}
 	}

@@ -61,7 +61,12 @@ int main (int argc,char *argv[])
 		cam.info();
 		cam.open();
 		while(cam.get_status())
-		{		
+		{
+			if(cam.is_ready())
+			{
+				cam.set_ready(false);
+				cout << "Ok, user choose to open a door\n";
+			}
 		}
 	}
 

@@ -56,13 +56,15 @@ private:
 	thread t1;
 	void startCamera();
 	bool status;
+	bool ready;
 public: 
 	void open();
 	void draw_markers(Mat frame);
 	void add_marker(Mat frame);
 	bool get_status();
 	void info();
-
+	bool is_ready();
+	void set_ready(bool state);
 
 	Camera()
 	{
@@ -73,6 +75,7 @@ public:
 			cout << "Could not read the camera parameters." << endl;
 		}
 		status = true;
+		ready = false;
 	}
 	void close();
 };
