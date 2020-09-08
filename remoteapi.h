@@ -42,6 +42,14 @@ class RemoteApi
 {
 	private:
 		int clientID;
+		int wheelChair;
+		int wheelChairIni;
+		int arTag;
+		int arTagIni;
+		Vec3d tagPosition;
+		Vec3d tagOrientation;
+		quat tagQuaternion;
+		Marker realTag;
 	public:	
 		//getter- setter
 		int get_clientID();
@@ -49,6 +57,8 @@ class RemoteApi
 		RemoteApi()
 		{
 			clientID = -1;
+			arTagIni = -1;
+			wheelChairIni = -1;
 		}
 };
 
