@@ -5,6 +5,7 @@
 #include "charucomarker.cpp"
 #include "marker.cpp"
 #include "camera.cpp"
+#include "remoteapi.cpp"
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
 #include <opencv2/highgui.hpp>
@@ -65,9 +66,12 @@ int main (int argc,char *argv[])
 			if(cam.is_ready())
 			{
 				cam.set_ready(false);
-				cout << "Ok, user choose to open a door\n";
+				cout << "Ok, user choose to open a door.\n";
+				RemoteApi simulation; 
+				simulation.connect();
 			}
 		}
+
 	}
 
 	//now we have to start the thread to find the marker and follow it.
