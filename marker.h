@@ -61,6 +61,10 @@ public:
 		angle = ang;
 		set_quaternion(angle);
 	}
+	Marker()
+	{
+		ID = -1;
+	}
 };
 
 #endif /* MARKER_H */
