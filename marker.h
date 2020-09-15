@@ -52,6 +52,7 @@ public:
 	vec3 Vec3dtoVec3 (Vec3d source);
 	void print();
 	static bool is_in_list(vector<Marker> marker_list, int markerID);
+	static Marker get_marker_in_list(vector<Marker> marker_list, int markerID);
 
 	//constructors
 	Marker(int id, Vec3d pos, Vec3d ang)

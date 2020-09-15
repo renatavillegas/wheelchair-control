@@ -1,0 +1,101 @@
+                                    --Lua language study 
+
+-- Hello world 
+
+    --value = "world"
+    --print("Hello ".. value)
+
+-- Functions 
+    --function sum(a, b)
+    --    return a+b
+    --end
+--    function minmax(a, b)
+--        if a<b then
+--            return a, b
+--        end
+--        return b, a
+--    end
+
+-- Tables and loops
+
+    --A = {{0,0,0},{0,0,0},{0,0,0}} -- initialized table
+    --B = {} -- empty table 
+    --for i=1, #A, 1 do 
+    --    B[i] = {}
+    --    for j=1, #A[i], 1 do
+    --        if i == j then 
+    --            A[i][j]=1
+    --            B[i][j]=1
+    --        else
+    --            B[i][j]=0
+    --        end
+    --     end
+    --end 
+    
+-- Some notes 
+-- Sometimes can be useful to create an user interface to interact with the simulation. 
+-- Search for Custom UI puglin 
+-- I think that the path planning was not working because it's a joint moviment, and the
+-- was pure shapes. 
+-- We need to find out how to do the path planning in this case. 
+-- If the robot has different types of attuation or types to move the joints, is useful 
+-- to define states on SysCall_actuation.. Maybe it will be useful, the other guy used it 
+-- Next steps: find out if the path/motion planning does the inverse knematics of the 
+-- joints positions and velocities. I think it does, but. 
+
+--Some execution
+var1 = 1
+var2 = 2
+--print (sum(var1, var2))
+--minval, maxval = minmax(var1, var2)
+--print ("Minval =" .. minval .. "\n".."Maxval=".. maxval)
+--print(A.."\n") to print tables dont work. you'll need a for loop. 
+
+Lua rascunhos
+
+approach1=sim.getObjectHandle('CuboidApproach1')
+
+function sysCall_threadmain()
+    print"Hello"
+    robotHandle=sim.getObjectHandle('wheelchair')
+    targetHandle=sim.getObjectHandle('p3_goalPos')
+    -- joint handles
+    jointlf = sim.getObjectHandle("jointlf")
+    jointfr = sim.getObjectHandle("jointfr")
+    motorLeft = sim.getObjectHandle("motorLeft")
+    motorRight = sim.getObjectHandle("motorRight")
+    jointrlCaster = sim.getObjectHandle("jointrlCaster")
+    jointrr= sim.getObjectHandle("jointrr")
+    t=simOMPL.createTask('t')
+    local j1_space=simOMPL.createStateSpace('jointlf',simOMPL.StateSpaceType.joint_position,jh[1],{-170*math.pi/180},{170*math.pi/180},1)
+    local j2_space=simOMPL.createStateSpace('jointfr',simOMPL.StateSpaceType.joint_position,jh[2],{-120*math.pi/180},{120*math.pi/180},2)
+    local j3_space=simOMPL.createStateSpace('motorLeft',simOMPL.StateSpaceType.joint_position,jh[3],{-170*math.pi/180},{170*math.pi/180},3)
+    local j4_space=simOMPL.createStateSpace('motorRight',simOMPL.StateSpaceType.joint_position,jh[4],{-120*math.pi/180},{120*math.pi/180},0)
+    local j5_space=simOMPL.createStateSpace('jointrlCaster',simOMPL.StateSpaceType.joint_position,jh[5],{-170*math.pi/180},{170*math.pi/180},0)
+    local j6_space=simOMPL.createStateSpace('jointrr',simOMPL.StateSpaceType.joint_position,jh[6],{-120*math.pi/180},{120*math.pi/180},0)
+    simOMPL.setStateSpace(task,{j1_space,j2_space,j3_space,j4_space,j5_space,j6_space})
+
+    simOMPL.setAlgorithm(t,simOMPL.Algorithm.RRTConnect)
+    simOMPL.setCollisionPairs(t,{sim.getObjectHandle('wheelchair'),sim.handle_all})
+    startpos=sim.getObjectPosition(robotHandle,-1)
+    print(startpos)
+    startorient=sim.getObjectQuaternion(robotHandle,-1)
+    startpose={startpos[1],startpos[2],startpos[3],startorient[1],startorient[2],startorient[3],startorient[4]}
+    simOMPL.setStartState(t,startpose)
+    goalpos=sim.getObjectPosition(targetHandle,-1)
+    print(goalpos)
+    goalorient=sim.getObjectQuaternion(targetHandle,-1)
+   goalpose={goalpos[1],goalpos[2],goalpos[3],goalorient[1],goalorient[2],goalorient[3],goalorient[4]}
+   simOMPL.setGoalState(t,goalpose)
+   r,path=simOMPL.compute(t,30,-1,2)
+
+
+        -- Simply jump through the path points, no interpolation here:
+ --       for i=1,#path-7,7 do
+ --           pos={path[i],path[i+1],path[i+2]}
+ --           orient={path[i+3],path[i+4],path[i+5],path[i+6]}
+--            sim.setObjectPosition(robotHandle,-1,pos)
+--            sim.setObjectQuaternion(robotHandle,-1,orient)
+--            sim.switchThread()
+--        end
+end

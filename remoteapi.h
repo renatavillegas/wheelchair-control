@@ -46,14 +46,14 @@ class RemoteApi
 		int wheelChairIni;
 		int arTag;
 		int arTagIni;
-		Vec3d tagPosition;
-		Vec3d tagOrientation;
-		quat tagQuaternion;
+		simxFloat TagQuaternion[4];
+		simxFloat TagPosition[3];
 		Marker realTag;
 	public:	
 		//getter- setter
 		int get_clientID();
 		void connect();
+		void set_tag_position(Marker realTag);
 		RemoteApi()
 		{
 			clientID = -1;

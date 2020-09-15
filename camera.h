@@ -62,6 +62,7 @@ public:
 	void draw_markers(Mat frame);
 	void add_marker(Mat frame);
 	bool get_status();
+	Marker get_detectedMarker(int id);
 	void info();
 	bool is_ready();
 	void set_ready(bool state);

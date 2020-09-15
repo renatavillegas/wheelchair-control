@@ -62,6 +62,25 @@ bool Marker::is_in_list(vector<Marker> marker_list, int markerID)
 	return false;
 }
 
+Marker Marker::get_marker_in_list(vector<Marker> marker_list, int markerID)
+{
+	Marker tag;
+	if (is_in_list(marker_list, markerID))
+	{
+		for(int i =0; i < marker_list.size(); i++)
+		{
+			tag = marker_list[i];
+			if (tag.get_id()==markerID)
+				break;
+		}
+	}
+	else
+	{
+		cout << "ERROR: This ID is not in the list\n";
+	}
+	return tag;
+}
+
 void Marker::print()
 {
 	cout <<"Marker ID = " << ID <<endl

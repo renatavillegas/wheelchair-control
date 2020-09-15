@@ -38,6 +38,11 @@ void Camera::set_ready(bool state)
 {
 	ready = state;
 }
+Marker Camera::get_detectedMarker(int id)
+{
+	return Marker::get_marker_in_list(detectedMarkers, id);
+}
+
 void Camera::startCamera()
 {
 	VideoCapture cap(0);

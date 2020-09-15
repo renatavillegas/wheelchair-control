@@ -67,8 +67,14 @@ int main (int argc,char *argv[])
 			{
 				cam.set_ready(false);
 				cout << "Ok, user choose to open a door.\n";
+				cout<<"Please, enter the ID of tag correspondig"
+			     	<< " to the doot you want to open\n";
+			    int id;
+			    cin>>id;
+			    Marker simTag = cam.get_detectedMarker(id);
 				RemoteApi simulation; 
 				simulation.connect();
+				simulation.set_tag_position(simTag);
 			}
 		}
 
