@@ -1,11 +1,11 @@
 //Main class. This class will be used to initialize all the system. 
 
 #include <stdio.h>
-#include "cameraCalibration.cpp"
-#include "charucomarker.cpp"
-#include "marker.cpp"
-#include "camera.cpp"
-#include "remoteapi.cpp"
+#include "lib/cameraCalibration.cpp"
+#include "lib/charucomarker.cpp"
+#include "lib/marker.cpp"
+#include "lib/camera.cpp"
+#include "lib/remoteapi.cpp"
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
 #include <opencv2/highgui.hpp>
@@ -67,10 +67,11 @@ int main (int argc,char *argv[])
 			{
 				cam.set_ready(false);
 				cout << "Ok, user choose to open a door.\n";
-				cout<<"Please, enter the ID of tag correspondig"
+				cout<<"Please, enter the ID of tag corresponding"
 			     	<< " to the doot you want to open\n";
 			    int id;
 			    cin>>id;
+			    if(id!=-1)
 			    Marker simTag = cam.get_detectedMarker(id);
 				RemoteApi simulation; 
 				simulation.connect();
