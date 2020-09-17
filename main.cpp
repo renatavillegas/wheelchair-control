@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include "lib/cameraCalibration.cpp"
-#include "lib/charucomarker.cpp"
 #include "lib/marker.cpp"
 #include "lib/camera.cpp"
 #include "lib/remoteapi.cpp"
@@ -69,13 +68,16 @@ int main (int argc,char *argv[])
 				cout << "Ok, user choose to open a door.\n";
 				cout<<"Please, enter the ID of tag corresponding"
 			     	<< " to the doot you want to open\n";
-			    int id;
+			    int id=-1;
 			    cin>>id;
 			    if(id!=-1)
-			    Marker simTag = cam.get_detectedMarker(id);
-				RemoteApi simulation; 
-				simulation.connect();
-				simulation.set_tag_position(simTag);
+			    {
+			    	Marker simTag = cam.get_detectedMarker(id);
+			    	RemoteApi simulation; 
+					simulation.connect();
+					simulation.set_tag_position(simTag);
+			    }
+				
 			}
 		}
 
