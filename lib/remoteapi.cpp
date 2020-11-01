@@ -8,6 +8,8 @@ int wheelChair;
 int wheelChairIni=-1;
 int arTag;
 int arTagIni=-1;
+int doorPosition; 
+int doorPositionIni = -1;
 simxFloat TagQuaternion[4];
 simxFloat TagPosition[3];
 Marker realTag;
@@ -25,7 +27,7 @@ void RemoteApi::connect()
 		cout << "ERROR: No connection avaliable\n";
 		simxFinish(clientID);
 	}
-	wheelChairIni = simxGetObjectHandle(clientID, "wheelchair", &wheelChair, simx_opmode_blocking);
+	wheelChairIni = simxGetObjectHandle(clientID, "wheelchair2", &wheelChair, simx_opmode_blocking);
 	if(wheelChairIni==-1)
 	{
 		cout << "ERROR: Can't connect to the robot.\n";
@@ -35,6 +37,12 @@ void RemoteApi::connect()
 	if(arTag == -1)
 	{
 		cout << "ERROR: Can't find the tag.\n";
+		simxFinish(clientID);
+	}
+	doorPositionIni = simxGetObjectHandle(clientID, "DoorPositionDummy", &doorPosition, simx_opmode_blocking);
+	if(doorPosition == -1)
+	{
+		cout << "ERROR: Can't find the door.\n";
 		simxFinish(clientID);
 	}
 }
@@ -51,7 +59,7 @@ void RemoteApi::set_tag_position(Marker tag)
 							 (float)realTag.get_position()[1], 
 							 (float)realTag.get_position()[2]};
 	realTag.print();
-	simxSetObjectPosition(clientID, arTag, -1, Position, simx_opmode_oneshot);
-	simxSetObjectQuaternion(clientID, arTag, -1, RotQuaternion, simx_opmode_oneshot);
+	simxSetObjectPosition(clientID, doorPosition, -1, Position, simx_opmode_oneshot);
+	simxSetObjectQuaternion(clientID, doorPosition, -1, RotQuaternion, simx_opmode_oneshot);
 }
 

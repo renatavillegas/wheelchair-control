@@ -67,7 +67,7 @@ int main (int argc,char *argv[])
 				cam.set_ready(false);
 				cout << "Ok, user choose to open a door.\n";
 				cout<<"Please, enter the ID of tag corresponding"
-			     	<< " to the doot you want to open\n";
+			     	<< " to the door that you want to open\n";
 			    int id=-1;
 			    cin>>id;
 			    if(id!=-1)
