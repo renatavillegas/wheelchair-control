@@ -59,11 +59,11 @@ void RemoteApi::set_tag_position(Marker tag)
 							 (float)realTag.get_position()[1], 
 							 (float)realTag.get_position()[2]};
 	simxFloat newPos[3];
-	simxGetObjectPosition(clientID, doorPosition, -1, newPos, simx_opmode_blocking);
-	newPos[1]=(float)realTag.get_position()[0];
-	newPos[2]=(float)realTag.get_position()[1];
+	simxGetObjectPosition(clientID, doorPosition, robot, newPos, simx_opmode_blocking);
+	newPos[0]=(float)realTag.get_position()[0];
+	newPos[1]=(float)realTag.get_position()[1];
 	realTag.print();
-	simxSetObjectPosition(clientID, doorPosition, -1, newPos, simx_opmode_blocking);
-	simxSetObjectQuaternion(clientID, doorPosition, -1, RotQuaternion, simx_opmode_blocking);
+	simxSetObjectPosition(clientID, doorPosition, robot, newPos, simx_opmode_blocking);
+	simxSetObjectQuaternion(clientID, doorPosition, robot, RotQuaternion, simx_opmode_blocking);
 }
 
