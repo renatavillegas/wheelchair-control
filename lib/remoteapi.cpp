@@ -21,7 +21,8 @@ int RemoteApi::get_clientID()
 }
 void RemoteApi::connect()
 {
-	clientID=simxStart("127.0.0.1",19997,true,true,100,5);
+	clientID=simxStart("127.0.0.1",19999,true,true,100,5);
+	simxSynchronous(clientID,true);
 	if(clientID == -1) 
 	{
 		cout << "ERROR: No connection avaliable\n";
@@ -59,11 +60,12 @@ void RemoteApi::set_tag_position(Marker tag)
 							 (float)realTag.get_position()[1], 
 							 (float)realTag.get_position()[2]};
 	simxFloat newPos[3];
-	simxGetObjectPosition(clientID, doorPosition, robot, newPos, simx_opmode_blocking);
+	simxGetObjectPosition(clientID, doorPosition, wheelChair, newPos, simx_opmode_blocking);
 	newPos[0]=(float)realTag.get_position()[0];
 	newPos[1]=(float)realTag.get_position()[1];
-	realTag.print();
-	simxSetObjectPosition(clientID, doorPosition, robot, newPos, simx_opmode_blocking);
-	simxSetObjectQuaternion(clientID, doorPosition, robot, RotQuaternion, simx_opmode_blocking);
+	cout << "newpos:" <<newPos[0] <<"; "<< newPos[1] <<"; "<< newPos[2] << endl;
+		realTag.print();
+	simxSetObjectPosition(clientID, doorPosition, wheelChair, newPos, simx_opmode_blocking);
+	//simxSetObjectQuaternion(clientID, doorPosition, robot, RotQuaternion, simx_opmode_blocking);
 }
 
