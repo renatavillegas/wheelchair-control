@@ -80,8 +80,8 @@ void RemoteApi::set_tag_position(Marker tag)
 	simxFloat robotPos[3];
 	simxGetObjectPosition(clientID, cameraDummy, -1, robotPos, simx_opmode_blocking);
 	//change the door position based on the TAG position 
-	doorPos[0]=robotPos[0]+(float)realTag.get_position()[0];
-	doorPos[1]=robotPos[1]+(float)realTag.get_position()[1];
+	doorPos[0]=robotPos[0]-(float)realTag.get_position()[0];
+	doorPos[1]=robotPos[1]-(float)realTag.get_position()[1];
 	cout << "doorPos:" <<doorPos[0] <<"; "<< doorPos[1] <<"; "<< doorPos[2] << endl;
 		realTag.print();
 
@@ -95,7 +95,7 @@ void RemoteApi::set_tag_position(Marker tag)
 	simxFloat goalPos[3];
 	simxGetObjectPosition(clientID, goal, -1, goalPos, simx_opmode_blocking);
 	goalPos[0]=doorPos[0];
-	goalPos[1]=doorPos[1]-0.01;
+	goalPos[1]=doorPos[1]+0.01;
 	simxSetObjectPosition(clientID, goal, -1, goalPos, simx_opmode_blocking);
 	//assuming that everything is working, call the path planning 
 	simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript ,"path_planning",
