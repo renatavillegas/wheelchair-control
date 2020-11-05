@@ -97,11 +97,14 @@ void RemoteApi::set_tag_position(Marker tag)
 	goalPos[0]=doorPos[0];
 	goalPos[1]=doorPos[1]+0.01;
 	simxSetObjectPosition(clientID, goal, -1, goalPos, simx_opmode_oneshot);
-	//assuming that everything is working, call the path planning 
-	simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript ,"path_planning",
+	//assuming that everything is working, call the path planning
+	int retIntCount= 1;
+	int* retInt; 
+	int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript ,"path_planning",
 							 0, NULL, 0, NULL, 0, NULL, 0, NULL, //inputs
-							 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, //outputs
-							 simx_opmode_oneshot);
+							 &retIntCount,&retInt, NULL, NULL, NULL, NULL, NULL, NULL, //outputs
+							 simx_opmode_blocking);
+	cout << "Planning = " << retInt[1] << endl;
 
 
 }
