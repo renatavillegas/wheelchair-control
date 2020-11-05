@@ -2,7 +2,7 @@
 using namespace cv;
 using namespace std;
 using namespace glm;
-
+//scene objects 
 int clientID=-1;
 int robot;
 int robotIni=-1;
@@ -32,36 +32,36 @@ void RemoteApi::connect()
 		cout << "ERROR: No connection avaliable\n";
 		simxFinish(clientID);
 	}
-	robotIni = simxGetObjectHandle(clientID, "wheelchair2", &robot, simx_opmode_blocking);
-	if(robotIni==-1)
-	{
-		cout << "ERROR: Can't connect to the robot.\n";
-		simxFinish(clientID);
-	}
-	cameraDummyIni = simxGetObjectHandle(clientID, "CameraDummy", &cameraDummy, simx_opmode_blocking);
-	if(cameraDummyIni==-1)
-	{
-		cout << "ERROR: Can't connect to the camera dummy.\n";
-		simxFinish(clientID);
-	}
-	arTagIni = simxGetObjectHandle(clientID, "ARTag", &arTag, simx_opmode_blocking);
-	if(arTag == -1)
-	{
-		cout << "ERROR: Can't find the tag.\n";
-		simxFinish(clientID);
-	}
-	doorIni = simxGetObjectHandle(clientID, "DoorPositionDummy", &door, simx_opmode_blocking);
-	if(doorIni == -1)
-	{
-		cout << "ERROR: Can't find the door.\n";
-		simxFinish(clientID);
-	}
-	goalIni = simxGetObjectHandle(clientID, "GoalCameraDummy", &goal, simx_opmode_blocking);
-	if(goalIni == -1)
-	{
-		cout << "ERROR: Can't find the goal.\n";
-		simxFinish(clientID);
-	}
+}
+void RemoteApi::initialize_objects()
+{
+		(simxGetObjectHandle(clientID, "wheelchair2", &robotHandle, simx_opmode_blocking)
+							 == simx_return_ok?cout<<"Robot Connected"<<endl:cout<<"ERROR: Robot Connection Failed"<<endl);
+
+		(simxGetObjectHandle(clientID, "wheelchair_rightMotor", &rightMotorHandle, simx_opmode_blocking)
+							 == simx_return_ok?cout<<"Right motor Connected"<<endl:cout<<"ERROR: Right motor Connection Failed"<<endl);
+
+		(simxGetObjectHandle(clientID, "wheelchair_leftMotor", &leftMotorHandle, simx_opmode_blocking)
+							 == simx_return_ok?cout<<"Left motor Connected"<<endl:cout<<"ERROR: Left motor Connection Failed"<<endl);
+		
+		(simxGetObjectHandle(clientID, "Path2", &pathHandle, simx_opmode_blocking)
+							 == simx_return_ok?cout<<"Path Connected"<<endl:cout<<"ERROR:Path Connection Failed"<<endl);
+
+		(simxGetObjectHandle(clientID, "wheelchairFrame2", &startDummyHandle, simx_opmode_blocking)
+							 == simx_return_ok?cout<<"Wheelchair frame Connected"<<endl:cout<<"ERROR:Wheelchair frame Connection Failed"<<endl);
+
+		(simxGetObjectHandle(clientID, "wheelchairFrameGoal", &goalHandle, simx_opmode_blocking)
+							 == simx_return_ok?cout<<"Goal frame Connected"<<endl:cout<<"ERROR: Goal frame Connection Failed"<<endl);
+		
+		(simxGetObjectHandle(clientID, "ARTag", &arTagHandle, simx_opmode_blocking)
+							 == simx_return_ok?cout<<"ARTag frame Connected"<<endl:cout<<"ERROR: ARTag frame Connection Failed"<<endl);
+	
+		(simxGetObjectHandle(clientID, "DoorPositionDummy", &doorHandle, simx_opmode_blocking)
+							 == simx_return_ok?cout<<"Door frame Connected"<<endl:cout<<"ERROR: Door frame Connection Failed"<<endl);
+
+		(simxGetObjectHandle(clientID, "GoalCameraDummy", &cameraDummyHandle, simx_opmode_blocking)
+							 == simx_return_ok?cout<<"Camera frame Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);
+		
 }
 void RemoteApi::set_tag_position(Marker tag)
 {
@@ -76,7 +76,7 @@ void RemoteApi::set_tag_position(Marker tag)
 							 (float)realTag.get_position()[1], 
 							 (float)realTag.get_position()[2]};
 	simxFloat doorPos[3];
-	simxGetObjectPosition(clientID, door, -1, doorPos, simx_opmode_blocking);
+	simxGetObjectPosition(clientID, doorHandle, -1, doorPos, simx_opmode_blocking);
 	simxFloat robotPos[3];
 	simxGetObjectPosition(clientID, cameraDummy, -1, robotPos, simx_opmode_blocking);
 	//change the door position based on the TAG position 

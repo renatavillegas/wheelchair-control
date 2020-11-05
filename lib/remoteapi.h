@@ -42,10 +42,15 @@ class RemoteApi
 {
 	private:
 		int clientID;
-		int wheelChair;
-		int wheelChairIni;
-		int arTag;
-		int arTagIni;
+		int robotHandle;
+		int rightMotorHandle;
+		int leftMotorHandle;
+		int pathHandle;
+		int startDummyHandle;
+		int goalHandle;	
+		int arTagHandle;
+		int doorHandle;
+		int cameraDummyHandle;
 		simxFloat TagQuaternion[4];
 		simxFloat TagPosition[3];
 		Marker realTag;
@@ -53,12 +58,11 @@ class RemoteApi
 		//getter- setter
 		int get_clientID();
 		void connect();
+		void initialize_objects();
 		void set_tag_position(Marker realTag);
 		RemoteApi()
 		{
 			clientID = -1;
-			arTagIni = -1;
-			wheelChairIni = -1;
 		}
 };
 
