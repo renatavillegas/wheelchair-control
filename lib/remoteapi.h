@@ -51,6 +51,7 @@ class RemoteApi
 		int arTagHandle;
 		int doorHandle;
 		int cameraDummyHandle;
+		int goalCameraDummyHandle;
 		simxFloat TagQuaternion[4];
 		simxFloat TagPosition[3];
 		Marker realTag;

@@ -2,18 +2,8 @@
 using namespace cv;
 using namespace std;
 using namespace glm;
-//scene objects 
-int clientID=-1;
-int robot;
-int robotIni=-1;
-int cameraDummy;
-int cameraDummyIni=-1;
-int arTag;
-int arTagIni=-1;
-int door; 
-int doorIni = -1;
-int goal;
-int goalIni = -1;
+
+
 simxFloat TagQuaternion[4];
 simxFloat TagPosition[3];
 Marker realTag;
@@ -59,7 +49,9 @@ void RemoteApi::initialize_objects()
 		(simxGetObjectHandle(clientID, "DoorPositionDummy", &doorHandle, simx_opmode_blocking)
 							 == simx_return_ok?cout<<"Door frame Connected"<<endl:cout<<"ERROR: Door frame Connection Failed"<<endl);
 
-		(simxGetObjectHandle(clientID, "GoalCameraDummy", &cameraDummyHandle, simx_opmode_blocking)
+		(simxGetObjectHandle(clientID, "CameraDummy", &cameraDummyHandle, simx_opmode_blocking)
+							 == simx_return_ok?cout<<"Camera frame Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);
+		(simxGetObjectHandle(clientID, "GoalCameraDummy", &goalCameraDummyHandle, simx_opmode_blocking)
 							 == simx_return_ok?cout<<"Camera frame Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);
 		
 }
@@ -78,34 +70,29 @@ void RemoteApi::set_tag_position(Marker tag)
 	simxFloat doorPos[3];
 	simxGetObjectPosition(clientID, doorHandle, -1, doorPos, simx_opmode_blocking);
 	simxFloat robotPos[3];
-	simxGetObjectPosition(clientID, cameraDummy, -1, robotPos, simx_opmode_blocking);
+	simxGetObjectPosition(clientID, cameraDummyHandle, -1, robotPos, simx_opmode_blocking);
 	//change the door position based on the TAG position 
 	doorPos[0]=robotPos[0]-(float)realTag.get_position()[0];
 	doorPos[1]=robotPos[1]-(float)realTag.get_position()[1];
 	cout << "doorPos:" <<doorPos[0] <<"; "<< doorPos[1] <<"; "<< doorPos[2] << endl;
 		realTag.print();
 
-	simxSetObjectPosition(clientID, door, -1, doorPos, simx_opmode_oneshot);
+	simxSetObjectPosition(clientID, doorHandle, -1, doorPos, simx_opmode_oneshot);
+	
+
 	//simxSetObjectQuaternion(clientID, doorPosition, wheelChair, RotQuaternion, simx_opmode_blocking);
 	// change the goal position based on the door position.
 	// get the door position in relation to the world 
-	simxGetObjectPosition(clientID, door, -1, doorPos, simx_opmode_blocking);
+	if (simxGetObjectPosition(clientID, doorHandle, -1, doorPos, simx_opmode_blocking)!=simx_return_ok)
+		cout<< "ERROR: get door position failed."<< endl;
 	cout << "doorPos2:" <<doorPos[0] <<"; "<< doorPos[1] <<"; "<< doorPos[2] << endl;
 	//get the goalPosition relative to the world
 	simxFloat goalPos[3];
-	simxGetObjectPosition(clientID, goal, -1, goalPos, simx_opmode_blocking);
+	if (simxGetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_blocking)!=simx_return_ok)
+		cout<< "ERROR: get goal position failed."<< endl;
 	goalPos[0]=doorPos[0];
-	goalPos[1]=doorPos[1]+0.01;
-	simxSetObjectPosition(clientID, goal, -1, goalPos, simx_opmode_oneshot);
-	//assuming that everything is working, call the path planning
-	int retIntCount= 1;
-	int* retInt; 
-	int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript ,"path_planning",
-							 0, NULL, 0, NULL, 0, NULL, 0, NULL, //inputs
-							 &retIntCount,&retInt, NULL, NULL, NULL, NULL, NULL, NULL, //outputs
-							 simx_opmode_blocking);
-	cout << "Planning = " << retInt[1] << endl;
-
-
+	goalPos[1]=doorPos[1]+0.1;
+	simxSetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot);
+	cout << "Now that we have the goal, start the path planning" << endl;
 }
 
