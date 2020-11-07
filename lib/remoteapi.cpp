@@ -142,17 +142,21 @@ void RemoteApi::path_following()
 	float vl =0; 
 	float *velocities;
 	
-	int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript, "path_following",
-										inIntCount, inInt,0, NULL, 0, NULL,0,NULL,
-										&outIntCount, &closeToTarget, &OutFloatCount , &velocities, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
-	if (result == simx_return_ok && velocities != NULL)
+	do
 	{
-		cout << "closeToTarget = "<< *closeToTarget << endl;
-		vl = velocities[0];
-		vr = velocities[1];
-		cout << "LeftV = " << vl <<", RightV = " << vr << endl;
-		//update velocities 
-		simxSetJointTargetVelocity(clientID, rightMotorHandle, vr, simx_opmode_oneshot);
-		simxSetJointTargetVelocity(clientID, leftMotorHandle, vl, simx_opmode_oneshot);
+		int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript, "path_following",
+											inIntCount, inInt,0, NULL, 0, NULL,0,NULL,
+											&outIntCount, &closeToTarget, &OutFloatCount , &velocities, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
+		if (result == simx_return_ok && velocities != NULL)
+		{
+			cout << "closeToTarget = "<< *closeToTarget << endl;
+			vl = velocities[0];
+			vr = velocities[1];
+			cout << "LeftV = " << vl <<", RightV = " << vr << endl;
+			//update velocities 
+			simxSetJointTargetVelocity(clientID, rightMotorHandle, vr, simx_opmode_oneshot);
+			simxSetJointTargetVelocity(clientID, leftMotorHandle, vl, simx_opmode_oneshot);
+		}
 	}
+	while(*closeToTarget == 0);
 }
