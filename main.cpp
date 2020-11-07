@@ -79,6 +79,7 @@ int main (int argc,char *argv[])
 					simulation.set_tag_position(simTag);
 					simulation.check_collision();
 					simulation.path_planning();
+					simulation.path_following();
 			    }
 				
 			}

@@ -3,7 +3,6 @@ using namespace cv;
 using namespace std;
 using namespace glm;
 
-
 simxFloat TagQuaternion[4];
 simxFloat TagPosition[3];
 Marker realTag;
@@ -116,9 +115,6 @@ void RemoteApi::check_collision()
 
 void RemoteApi::path_planning()
 {
-	// get path planning task 
-	//(simxGetObjectHandle(clientID, "PathPlanningTask1", &planningTaskHandle, simx_opmode_oneshot_wait)
-	//						 == simx_return_ok?cout<<"Planning task Connected"<<endl:cout<<"ERROR: Planning task Connection Failed"<<endl);		
 	int *pathCalculated;
 	int closeToTarget=-1;
 	int intCount=1;
@@ -130,5 +126,33 @@ void RemoteApi::path_planning()
 	if(*pathCalculated != 0)
 		cout << "Path calculated = " << *pathCalculated << endl;
 	else
-		cout << "ERROR during path planning." << endl;
+		cout << "ERROR during the path planning." << endl;
+}
+
+void RemoteApi::path_following()
+{
+	const int inIntCount = 4;
+	//Inputs : path handle, robot frame, left motor, right motor
+	int inInt []= {pathHandle, startDummyHandle, leftMotorHandle, rightMotorHandle};
+	//Outputs: Close to target, vl, vr
+	int outIntCount = 1;
+	int *closeToTarget =0;
+	int OutFloatCount = 2;
+	float vr = 0;
+	float vl =0; 
+	float *velocities;
+	
+	int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript, "path_following",
+										inIntCount, inInt,0, NULL, 0, NULL,0,NULL,
+										&outIntCount, &closeToTarget, &OutFloatCount , &velocities, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
+	if (result == simx_return_ok && velocities != NULL)
+	{
+		cout << "closeToTarget = "<< *closeToTarget << endl;
+		vl = velocities[0];
+		vr = velocities[1];
+		cout << "LeftV = " << vl <<", RightV = " << vr << endl;
+		//update velocities 
+		simxSetJointTargetVelocity(clientID, rightMotorHandle, vr, simx_opmode_oneshot);
+		simxSetJointTargetVelocity(clientID, leftMotorHandle, vl, simx_opmode_oneshot);
+	}
 }

@@ -66,6 +66,7 @@ class RemoteApi
 		void set_tag_position(Marker realTag);
 		void path_planning();
 		void check_collision();
+		void path_following();
 		RemoteApi()
 		{
 			clientID = -1;
