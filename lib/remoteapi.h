@@ -53,7 +53,8 @@ class RemoteApi
 		int cameraDummyHandle;
 		int goalCameraDummyHandle;
 		int collidableForPathPlanningHandle;
-		int obstaclesHandle; 
+		int obstaclesHandle;
+		int planningTaskHandle; 
 		simxFloat TagQuaternion[4];
 		simxFloat TagPosition[3];
 		Marker realTag;

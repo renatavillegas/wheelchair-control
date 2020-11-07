@@ -116,13 +116,19 @@ void RemoteApi::check_collision()
 
 void RemoteApi::path_planning()
 {
-	int *pathCalculed;
+	// get path planning task 
+	//(simxGetObjectHandle(clientID, "PathPlanningTask1", &planningTaskHandle, simx_opmode_oneshot_wait)
+	//						 == simx_return_ok?cout<<"Planning task Connected"<<endl:cout<<"ERROR: Planning task Connection Failed"<<endl);		
+	int *pathCalculated;
 	int closeToTarget=-1;
 	int intCount=1;
+	const int inIntCount = 1;
+	int inInt []= {planningTaskHandle};
 	int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript, "path_planning",
 										0, NULL,0, NULL, 0, NULL,0,NULL,
-										&intCount, &pathCalculed, NULL, NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
-	(result == simx_return_ok? cout << "Path planning ok. " << pathCalculed[1] << endl : 
-							   cout <<"ERROR: Path planning failed."<< endl);
-
+										&intCount, &pathCalculated, NULL, NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	if(*pathCalculated != 0)
+		cout << "Path calculated = " << *pathCalculated << endl;
+	else
+		cout << "ERROR during path planning." << endl;
 }
