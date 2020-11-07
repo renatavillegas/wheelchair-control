@@ -77,6 +77,7 @@ int main (int argc,char *argv[])
 					simulation.connect();
 					simulation.initialize_objects();
 					simulation.set_tag_position(simTag);
+					simulation.check_collision();
 			    }
 				
 			}

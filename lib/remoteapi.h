@@ -52,6 +52,8 @@ class RemoteApi
 		int doorHandle;
 		int cameraDummyHandle;
 		int goalCameraDummyHandle;
+		int collidableForPathPlanningHandle;
+		int obstaclesHandle; 
 		simxFloat TagQuaternion[4];
 		simxFloat TagPosition[3];
 		Marker realTag;
@@ -61,6 +63,8 @@ class RemoteApi
 		void connect();
 		void initialize_objects();
 		void set_tag_position(Marker realTag);
+		void path_planning();
+		void check_collision();
 		RemoteApi()
 		{
 			clientID = -1;

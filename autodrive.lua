@@ -884,3 +884,27 @@ function sysCall_cleanup()
 end
 
  
+6.1755e-1
+8.7352e-1
+1.0234e+0
+
+
+
+
+if (pathCalculated==1) then
+    print("path")
+    r=simPerformPathSearchStep(tempPathSearchObject,false)
+    if (r<1) then
+        if (r~=-2) then
+            pathCalculated=0 -- path search failed, try again from the beginning
+            tempPathSearchObject=-1
+         end
+     else
+         print("We've find a path")
+         c=2 -- we found a path
+         currentPosOnPath=0
+         tempPathSearchObject=-1
+         sim.setObjectPosition(robot,-1, sim.getPositionOnPath(pathHandle,currentPosOnPath))
+         sim.setObjectOrientation(robot, -1, sim.getOrientationOnPath(pathHandle,currentPosOnPath))
+     end
+end
