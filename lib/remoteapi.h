@@ -67,6 +67,7 @@ class RemoteApi
 		void path_planning();
 		void check_collision();
 		void path_following();
+		void adjust_orientation();
 		RemoteApi()
 		{
 			clientID = -1;

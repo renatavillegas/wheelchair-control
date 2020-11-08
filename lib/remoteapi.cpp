@@ -137,16 +137,15 @@ void RemoteApi::path_following()
 	//Outputs: Close to target, vl, vr
 	int outIntCount = 1;
 	int *closeToTarget =0;
-	int OutFloatCount = 2;
+	int outFloatCount = 2;
 	float vr = 0;
 	float vl =0; 
 	float *velocities;
-	
 	do
 	{
 		int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript, "path_following",
 											inIntCount, inInt,0, NULL, 0, NULL,0,NULL,
-											&outIntCount, &closeToTarget, &OutFloatCount , &velocities, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
+											&outIntCount, &closeToTarget, &outFloatCount , &velocities, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
 		if (result == simx_return_ok && velocities != NULL)
 		{
 			cout << "closeToTarget = "<< *closeToTarget << endl;
@@ -159,4 +158,35 @@ void RemoteApi::path_following()
 		}
 	}
 	while(*closeToTarget == 0);
+}
+
+void RemoteApi::adjust_orientation()
+{
+	cout << "Now we are close to the object so we will adjust the orientation of the chair." << endl;
+	const int inIntCount = 2;
+	//Inputs : robot, goal
+	int inInt []= {startDummyHandle,goalHandle};
+	//Outputs: Stop, vl, vr
+	int outIntCount = 1;
+	int *stop =0;
+	int outFloatCount =2;
+	float *velocities;
+	float vl, vr;
+	do
+	{
+		int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript, "adjusting_orientation",
+											inIntCount, inInt,0, NULL, 0, NULL,0,NULL,
+											&outIntCount, &stop, &outFloatCount , &velocities, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
+		if (result == simx_return_ok && velocities != NULL)
+		{
+			vl = velocities[0];
+			vr = velocities[1];
+			cout << "LeftV = " << vl <<", RightV = " << vr << endl;
+			//update velocities 
+			simxSetJointTargetVelocity(clientID, rightMotorHandle, vr, simx_opmode_oneshot);
+			simxSetJointTargetVelocity(clientID, leftMotorHandle, vl, simx_opmode_oneshot);
+		}
+	}
+	while(*stop == 0);
+	cout << "The wheelchair now is in the correct position and orientation." << endl;
 }
