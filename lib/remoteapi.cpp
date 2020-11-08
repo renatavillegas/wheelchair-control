@@ -89,7 +89,7 @@ void RemoteApi::set_tag_position(Marker tag)
 	//get the goalPosition relative to the world
 	if (simxGetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot_wait)!=simx_return_ok)
 		cout<< "ERROR: get goal position failed."<< endl;
-	goalPos[0]=doorPos[0];
+	goalPos[0]=doorPos[0]-0.3;
 	goalPos[1]=doorPos[1]-0.25;
 	simxSetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot);
 	cout << "Now that we have the goal, start the path planning" << endl;
