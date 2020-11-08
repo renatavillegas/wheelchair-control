@@ -64,10 +64,15 @@ void RemoteApi::set_tag_position(Marker tag)
 								  (float)realTag.get_quaternion().y,
 								  (float)realTag.get_quaternion().z,
 								  (float)realTag.get_quaternion().w};
+	simxFloat Orientation[3] = {(float)realTag.get_angle()[0], 
+							 (float)realTag.get_angle()[1], 
+							 (float)realTag.get_angle()[2]};
+
 	simxFloat Position[3] = {(float)realTag.get_position()[0], 
 							 (float)realTag.get_position()[1], 
 							 (float)realTag.get_position()[2]};
 	simxFloat doorPos[3];
+	simxFloat doorOri[3];
 	simxGetObjectPosition(clientID, doorHandle, -1, doorPos, simx_opmode_oneshot_wait);
 	//robot pos
 	simxGetObjectPosition(clientID, cameraDummyHandle, -1, robotPos, simx_opmode_oneshot_wait);
@@ -75,7 +80,7 @@ void RemoteApi::set_tag_position(Marker tag)
 	doorPos[0]=robotPos[0]-(float)realTag.get_position()[0];
 	doorPos[1]=robotPos[1]-(float)realTag.get_position()[1];
 	cout << "doorPos:" <<doorPos[0] <<"; "<< doorPos[1] <<"; "<< doorPos[2] << endl;
-		realTag.print();
+	realTag.print();
 
 	simxSetObjectPosition(clientID, doorHandle, -1, doorPos, simx_opmode_oneshot);
 	
@@ -90,8 +95,15 @@ void RemoteApi::set_tag_position(Marker tag)
 	if (simxGetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot_wait)!=simx_return_ok)
 		cout<< "ERROR: get goal position failed."<< endl;
 	goalPos[0]=doorPos[0]-0.3;
-	goalPos[1]=doorPos[1]-0.25;
+	goalPos[1]=doorPos[1]-0.7;
 	simxSetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot);
+	// change the door orientation based on the camera capture. 
+	if (simxGetObjectOrientation(clientID, doorHandle, cameraDummyHandle, doorOri, simx_opmode_oneshot_wait)!=simx_return_ok)
+		cout<< "ERROR: get door orientation failed."<< endl;
+	cout << "doorOri in relation to the Camera:" <<doorOri[0] <<"; "<< doorOri[1] <<"; "<< doorOri[2] << endl;
+	doorOri[3]= Orientation[3];
+	simxSetObjectPosition(clientID, doorHandle, cameraDummyHandle, doorOri, simx_opmode_oneshot);
+
 	cout << "Now that we have the goal, start the path planning" << endl;
 }
 
