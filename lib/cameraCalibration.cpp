@@ -36,7 +36,7 @@ using namespace std;
 	// Dictionary of markers 
 	Ptr<aruco::Dictionary> mdictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50);
 	// Charuco board
-	Ptr<aruco::CharucoBoard> mcharucoBoard = aruco::CharucoBoard::create(7,7,0.032,0.016,mdictionary);
+	Ptr<aruco::CharucoBoard> mcharucoBoard = aruco::CharucoBoard::create(7,5,0.02,0.01,mdictionary);
 	//all corner and all ids used to calibrate
 	vector <Mat> mallCharucoCorners, mallCharucoIds;
 

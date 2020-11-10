@@ -102,7 +102,7 @@ void RemoteApi::set_tag_position(Marker tag)
 		cout<< "ERROR: get door orientation failed."<< endl;
 	cout << "doorOri in relation to the Camera:" <<doorOri[0] <<"; "<< doorOri[1] <<"; "<< doorOri[2] << endl;
 	doorOri[3]= Orientation[3];
-	simxSetObjectPosition(clientID, doorHandle, cameraDummyHandle, doorOri, simx_opmode_oneshot);
+	simxSetObjectOrientation(clientID, doorHandle, cameraDummyHandle, doorOri, simx_opmode_oneshot);
 
 	cout << "Now that we have the goal, start the path planning" << endl;
 }

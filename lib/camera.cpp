@@ -23,7 +23,7 @@ bool status = true;
 
 bool ready= false;
 
-float arucoSquareDimension =0.12f;
+float arucoSquareDimension =0.135f;
 
 
 bool Camera::get_status()
@@ -115,9 +115,9 @@ void Camera::open()
 }
 void Camera::info()
 {
-	cout<< "Now the chair is in manual control state." <<endl 
+	cout<< "Now the chair is in the manual control state." <<endl 
 	<<"The user can move through the room." << endl
-	<<"If any door were found on the way " 
+	<<"If any door is found on the way " 
 	<<"the user will be asked if he wants to open or keep moving."<< endl
-	<<"Press q to cancel the moviment and close the camera." << endl;  
+	<<"Press q to cancel the movement and close the camera." << endl;  
 }
