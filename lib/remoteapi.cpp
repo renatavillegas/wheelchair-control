@@ -78,7 +78,7 @@ void RemoteApi::set_tag_position(Marker tag)
 	simxGetObjectPosition(clientID, cameraDummyHandle, -1, robotPos, simx_opmode_oneshot_wait);
 	//change the door position based on the TAG position 
 	doorPos[0]=robotPos[0]-(float)realTag.get_position()[0];
-	doorPos[1]=robotPos[1]-(float)realTag.get_position()[1];
+	doorPos[1]=robotPos[1]+(float)realTag.get_position()[2];
 	cout << "doorPos:" <<doorPos[0] <<"; "<< doorPos[1] <<"; "<< doorPos[2] << endl;
 	realTag.print();
 
