@@ -175,24 +175,43 @@ void RemoteApi::path_following()
 void RemoteApi::adjust_orientation()
 {
 	cout << "Now we are close to the object so we will adjust the orientation of the chair." << endl;
+	cout << "Start PID control:" << endl ;
+	
+
+	float prev_error=0;
+	float integral=0;
+	float oldtime=0;
+	
+	float Kp=0.1; //--mm/s;
+	float Ki=0.001;//--0--0.09;
+	float Kd=0.9;//--0.9--30;
+
+	cout << "Kp = " << Ki <<", Ki = " << Ki   << Kp <<", Kd = " << Kd;
+
 	const int inIntCount = 2;
-	//Inputs : robot, goal
+	const int inFloatCount = 3;
+	//Inputs : robot, goal, prev_error, integral
 	int inInt []= {startDummyHandle,goalHandle};
-	//Outputs: Stop, vl, vr
+	float inFloat[] = {prev_error, integral, oldtime};
+
+	//Outputs: Stop, vl, vr, prev_error, integral 
 	int outIntCount = 1;
 	int *stop =0;
-	int outFloatCount =2;
-	float *velocities;
+	int outFloatCount =5;
+	float *outFloat;
 	float vl, vr;
 	do
 	{
 		int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript, "adjusting_orientation",
-											inIntCount, inInt,0, NULL, 0, NULL,0,NULL,
-											&outIntCount, &stop, &outFloatCount , &velocities, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
-		if (result == simx_return_ok && velocities != NULL)
+											inIntCount, inInt, inFloatCount, inFloat, 0, NULL,0,NULL,
+											&outIntCount, &stop, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
+		if (result == simx_return_ok && outFloat != NULL)
 		{
-			vl = velocities[0];
-			vr = velocities[1];
+			vl = outFloat[0];
+			vr = outFloat[1];
+			prev_error = outFloat[2];
+			integral = outFloat[3];
+			oldtime = outFloat[4];
 			cout << "LeftV = " << vl <<", RightV = " << vr << endl;
 			//update velocities 
 			simxSetJointTargetVelocity(clientID, rightMotorHandle, vr, simx_opmode_oneshot);
