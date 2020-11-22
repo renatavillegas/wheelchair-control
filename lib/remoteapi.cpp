@@ -61,6 +61,7 @@ void RemoteApi::initialize_objects()
 							 == simx_return_ok?cout<<"Camera frame Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);
 		(simxGetObjectHandle(clientID, "GoalCameraDummy", &goalCameraDummyHandle, simx_opmode_oneshot_wait)
 							 == simx_return_ok?cout<<"Camera frame Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);		
+		Manipulator jaco(clientID);
 }
 void RemoteApi::set_tag_position(Marker tag)
 {
@@ -229,5 +230,8 @@ void RemoteApi::adjust_orientation()
 	cout << "The wheelchair now is in the correct position and orientation." << endl;
 }
 
-
+void RemoteApi::motion_planning()
+{
+	Manipulator jaco(clientID);
+}
 

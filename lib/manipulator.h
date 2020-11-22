@@ -33,31 +33,25 @@ using namespace cv;
 using namespace std;
 using namespace glm;
 
-extern "C" {
-    #include "/home/renata/V-REP_PRO_EDU_V3_5_0_Linux/programming/remoteApi/extApi.c"
-     #include "/home/renata/V-REP_PRO_EDU_V3_5_0_Linux/programming/remoteApi/extApiPlatform.c"
-	#include "/home/renata/V-REP_PRO_EDU_V3_5_0_Linux/programming/common/shared_memory.c"
-}
 class Manipulator
 {
 	private:
 		int clientID;
-		int jh[] = {-1,-1,-1,-1,-1,-1};
-		int jt[] = {-1,-1,-1,-1,-1,-1};
-    	int jacoHandle=sim.getObjectHandle('Jaco');    
-    	int ikTarget=sim.getObjectHandle('Jaco_target')
-    	int ikTip=sim.getObjectHandle('Jaco_tip')
-    	int ikGroup=sim.getIkGroupHandle('Jaco_ik')
-    	int target0=sim.getObjectHandle('jacoTarget0')
-    	int target1=sim.getObjectHandle('jacoTarget1')
-    print("Jaco initialized.")
-
+    	int jacoHandle;
+    	int ikTarget;
+    	int ikTip;
+    	int ikGroup;
+    	int target0;
+    	int target1;
+		int jh[];
+		int jt[];
 	public:	
-		Manipulator(id)
-		{
-			clientID = id;
-			jacoHandle=simx.getObjectHandle('Jaco');
-		}
+		Manipulator(int id);
+
+		void getHandPosition();
+		void getHandOrientation();
+		void setKnobPosition();
+		void setKnobOrientation();
 		void exec();
 };
 

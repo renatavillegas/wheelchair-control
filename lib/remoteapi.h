@@ -29,6 +29,9 @@
 #include <glm/gtx/quaternion.hpp>
 #include "cameraCalibration.h"
 #include "marker.h"
+#include "manipulator.h"
+#include "manipulator.cpp"
+
 using namespace cv;
 using namespace std;
 using namespace glm;
@@ -69,6 +72,7 @@ class RemoteApi
 		void check_collision();
 		void path_following();
 		void adjust_orientation();
+		void motion_planning();
 };
 
 

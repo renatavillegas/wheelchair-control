@@ -79,6 +79,7 @@ int main (int argc,char *argv[])
 					simulation.path_planning();
 					simulation.path_following();
 					simulation.adjust_orientation();
+					simulation.motion_planning();
 			    }	
 			}
 		}
