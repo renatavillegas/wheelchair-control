@@ -10,6 +10,13 @@ Marker realTag;
 simxFloat goalPos[3];
 simxFloat robotPos[3];
 
+RemoteApi::RemoteApi()
+{
+	clientID = -1;
+	connect();
+	initialize_objects();
+}
+
 int RemoteApi::get_clientID()
 {
 	return clientID;
@@ -221,3 +228,6 @@ void RemoteApi::adjust_orientation()
 	while(*stop == 0);
 	cout << "The wheelchair now is in the correct position and orientation." << endl;
 }
+
+
+

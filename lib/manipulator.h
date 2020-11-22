@@ -1,5 +1,5 @@
-#ifndef REMOTEAPI_H // include guard
-#define REMOTEAPI_H
+#ifndef MANIPULATOR_H // include guard
+#define MANIPULATOR_H
 #define GLM_ENABLE_EXPERIMENTAL
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
@@ -38,39 +38,29 @@ extern "C" {
      #include "/home/renata/V-REP_PRO_EDU_V3_5_0_Linux/programming/remoteApi/extApiPlatform.c"
 	#include "/home/renata/V-REP_PRO_EDU_V3_5_0_Linux/programming/common/shared_memory.c"
 }
-class RemoteApi
+class Manipulator
 {
 	private:
 		int clientID;
-		int robotHandle;
-		int rightMotorHandle;
-		int leftMotorHandle;
-		int pathHandle;
-		int startDummyHandle;
-		int goalHandle;	
-		int arTagHandle;
-		int doorHandle;
-		int cameraDummyHandle;
-		int goalCameraDummyHandle;
-		int collidableForPathPlanningHandle;
-		int obstaclesHandle;
-		int planningTaskHandle; 
-		simxFloat TagQuaternion[4];
-		simxFloat TagPosition[3];
-		Marker realTag;
+		int jh[] = {-1,-1,-1,-1,-1,-1};
+		int jt[] = {-1,-1,-1,-1,-1,-1};
+    	int jacoHandle=sim.getObjectHandle('Jaco');    
+    	int ikTarget=sim.getObjectHandle('Jaco_target')
+    	int ikTip=sim.getObjectHandle('Jaco_tip')
+    	int ikGroup=sim.getIkGroupHandle('Jaco_ik')
+    	int target0=sim.getObjectHandle('jacoTarget0')
+    	int target1=sim.getObjectHandle('jacoTarget1')
+    print("Jaco initialized.")
+
 	public:	
-		//getter- setter
-		RemoteApi();
-		int get_clientID();
-		void connect();
-		void initialize_objects();
-		void set_tag_position(Marker realTag);
-		void path_planning();
-		void check_collision();
-		void path_following();
-		void adjust_orientation();
+		Manipulator(id)
+		{
+			clientID = id;
+			jacoHandle=simx.getObjectHandle('Jaco');
+		}
+		void exec();
 };
 
 
 
-#endif /* REMOTEAPI_H */
+#endif /* MANIPULATOR_H */

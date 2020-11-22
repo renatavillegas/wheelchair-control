@@ -74,15 +74,12 @@ int main (int argc,char *argv[])
 			    {
 			    	Marker simTag = cam.get_detectedMarker(id);
 			    	RemoteApi simulation; 
-					simulation.connect();
-					simulation.initialize_objects();
 					simulation.set_tag_position(simTag);
 					simulation.check_collision();
 					simulation.path_planning();
 					simulation.path_following();
 					simulation.adjust_orientation();
-			    }
-				
+			    }	
 			}
 		}
 
