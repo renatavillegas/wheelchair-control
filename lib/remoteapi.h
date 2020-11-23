@@ -61,6 +61,7 @@ class RemoteApi
 		simxFloat TagQuaternion[4];
 		simxFloat TagPosition[3];
 		Marker realTag;
+		Manipulator jaco;
 	public:	
 		//getter- setter
 		RemoteApi();
@@ -72,7 +73,7 @@ class RemoteApi
 		void check_collision();
 		void path_following();
 		void adjust_orientation();
-		void motion_planning();
+		void preapre_motion();
 };
 
 

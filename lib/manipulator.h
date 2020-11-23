@@ -47,12 +47,15 @@ class Manipulator
 		int jt[];
 	public:	
 		Manipulator(int id);
-
+		Manipulator();
 		void getHandPosition();
 		void getHandOrientation();
-		void setKnobPosition();
-		void setKnobOrientation();
+		void setKnobPosition(simxFloat doorPosition[3]);
+		void setKnobOrientation(simxFloat doorOrientation[3]);
 		void exec();
+		int get_JacoHandle();
+		int get_target1Handle();
+
 };
 
 

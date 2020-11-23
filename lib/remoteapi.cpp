@@ -61,7 +61,7 @@ void RemoteApi::initialize_objects()
 							 == simx_return_ok?cout<<"Camera frame Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);
 		(simxGetObjectHandle(clientID, "GoalCameraDummy", &goalCameraDummyHandle, simx_opmode_oneshot_wait)
 							 == simx_return_ok?cout<<"Camera frame Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);		
-		Manipulator jaco(clientID);
+		jaco = Manipulator(clientID);
 }
 void RemoteApi::set_tag_position(Marker tag)
 {
@@ -230,8 +230,16 @@ void RemoteApi::adjust_orientation()
 	cout << "The wheelchair now is in the correct position and orientation." << endl;
 }
 
-void RemoteApi::motion_planning()
+void RemoteApi::preapre_motion()
 {
-	Manipulator jaco(clientID);
+	//set the target position/orientation of the manipulator based on the door position 
+	simxFloat doorPos[3];
+	simxFloat doorOri[3];
+	if (simxGetObjectPosition(clientID, doorHandle, -1, doorPos, simx_opmode_oneshot_wait)!=simx_return_ok)
+		cout<< "ERROR: get door position failed."<< endl;
+	if (simxGetObjectOrientation(clientID, doorHandle, -1, doorOri, simx_opmode_oneshot_wait)!=simx_return_ok)
+		cout<< "ERROR: get door orientation failed."<< endl;
+	jaco.setKnobPosition(doorPos);
+	jaco.setKnobOrientation(doorOri);
 }
 
