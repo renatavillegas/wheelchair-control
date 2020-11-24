@@ -74,6 +74,7 @@ class RemoteApi
 		void path_following();
 		void adjust_orientation();
 		void preapre_motion();
+		void execute_motion();
 };
 
 

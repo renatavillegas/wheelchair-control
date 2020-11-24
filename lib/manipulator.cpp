@@ -67,3 +67,10 @@ void Manipulator::setKnobOrientation(simxFloat doorOri[3])
 {
 	simxSetObjectOrientation(clientID, target1, -1, doorOri,simx_opmode_oneshot);
 }
+
+void Manipulator::execute_motion()
+{
+	//execute the motion related function inside the simulation. 
+	//inputs: Joint handles, Joint types. 
+	//output: Motion executed. 
+}

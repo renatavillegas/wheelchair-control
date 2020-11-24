@@ -43,7 +43,7 @@ class Manipulator
     	int ikGroup;
     	int target0;
     	int target1;
-		int jh[];
+    	int jh[];
 		int jt[];
 	public:	
 		Manipulator(int id);
@@ -55,7 +55,7 @@ class Manipulator
 		void exec();
 		int get_JacoHandle();
 		int get_target1Handle();
-
+		void execute_motion();
 };
 
 
