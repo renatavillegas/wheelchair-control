@@ -62,7 +62,7 @@ void RemoteApi::initialize_objects()
 		(simxGetObjectHandle(clientID, "GoalCameraDummy", &goalCameraDummyHandle, simx_opmode_oneshot_wait)
 							 == simx_return_ok?cout<<"Camera frame Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);		
 		jaco = Manipulator(clientID);
-		execute_motion();
+		//execute_motion();
 }
 void RemoteApi::set_tag_position(Marker tag)
 {
@@ -246,6 +246,6 @@ void RemoteApi::preapre_motion()
 
 void RemoteApi::execute_motion()
 {
-
+	jaco.execute_motion();
 }
 

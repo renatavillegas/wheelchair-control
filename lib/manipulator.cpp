@@ -73,4 +73,10 @@ void Manipulator::execute_motion()
 	//execute the motion related function inside the simulation. 
 	//inputs: Joint handles, Joint types. 
 	//output: Motion executed. 
+	int inIntCount=0;
+	int *inInt= NULL;
+	int
+	result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "motionPlanning",
+											0, NULL, 0, NULL, 0, NULL,0,NULL,
+											NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
 }
