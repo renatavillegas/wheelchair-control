@@ -58,14 +58,34 @@ void Manipulator::setKnobPosition(simxFloat doorPos[3])
 {
 	simxFloat targetPos[3];
 	//experimental shift; 
-	targetPos[0]= doorPos[0] - 0.06;
-	targetPos[1]= doorPos[1] - 0.02;
-	targetPos[2]= doorPos[2] -0.13;
-	simxSetObjectPosition(clientID, target1, -1, targetPos,simx_opmode_oneshot);
+	if (doorPos!=NULL)
+	{
+		targetPos[0]= doorPos[0] + 0.05;
+		targetPos[1]= doorPos[1] - 0.25;
+		targetPos[2]= doorPos[2] -0.1;
+		int result = simxSetObjectPosition(clientID, target1, -1, targetPos,simx_opmode_oneshot_wait);
+		if (result!=simx_return_ok)
+			cout<< "ERROR: setKnobPosition Failed"<< endl;
+	}
+	else
+		cout << "ERROR: setKnobPosition:: doorPos is null"<< endl;
 }
+
 void Manipulator::setKnobOrientation(simxFloat doorOri[3])
 {
-	simxSetObjectOrientation(clientID, target1, -1, doorOri,simx_opmode_oneshot);
+	if (doorOri!=NULL)
+	{
+		simxFloat targetOri[3];
+		targetOri[0]=doorOri[0];
+		targetOri[1]= doorOri[1];
+		targetOri[2]= doorOri[2] - 1.57;
+
+		int result = simxSetObjectOrientation(clientID, target1, -1, targetOri,simx_opmode_oneshot_wait);
+		if (result!=simx_return_ok)
+			cout<< "ERROR: setKnobOrientation Failed"<< endl;
+	}
+	else
+		cout << "ERROR: setKnobOrientation:: doorOri is null"<< endl;
 }
 
 void Manipulator::execute_motion()
