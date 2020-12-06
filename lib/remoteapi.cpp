@@ -233,7 +233,9 @@ void RemoteApi::adjust_orientation()
 
 void RemoteApi::preapre_motion()
 {
-	//set the target position/orientation of the manipulator based on the door position 
+	//set the target position/orientation of the manipulator based on the door position
+	//To avoid colision between the knob and the fingers of the manipulator:
+	//Do a first approach and adjust the orientation.  
 	simxFloat doorPos[3];
 	simxFloat doorOri[3];
 	if (simxGetObjectPosition(clientID, doorHandle, -1, doorPos, simx_opmode_oneshot_wait)!=simx_return_ok)
@@ -242,6 +244,13 @@ void RemoteApi::preapre_motion()
 		cout<< "ERROR: get door orientation failed."<< endl;
 	jaco.setKnobPosition(doorPos);
 	jaco.setKnobOrientation(doorOri);
+}
+
+void RemoteApi::approach_to_grasp()
+{
+	// when the arm is in the correct position, just move on y(reference on simulation world)
+	// to initiate the grasping. 
+	
 }
 
 void RemoteApi::execute_motion()

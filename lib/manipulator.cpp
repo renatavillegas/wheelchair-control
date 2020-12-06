@@ -61,8 +61,8 @@ void Manipulator::setKnobPosition(simxFloat doorPos[3])
 	if (doorPos!=NULL)
 	{
 		targetPos[0]= doorPos[0] + 0.05;
-		targetPos[1]= doorPos[1] - 0.25;
-		targetPos[2]= doorPos[2] -0.1;
+		targetPos[1]= doorPos[1] - 0.1;
+		targetPos[2]= doorPos[2] -0.07;
 		int result = simxSetObjectPosition(clientID, target1, -1, targetPos,simx_opmode_oneshot_wait);
 		if (result!=simx_return_ok)
 			cout<< "ERROR: setKnobPosition Failed"<< endl;
@@ -88,15 +88,30 @@ void Manipulator::setKnobOrientation(simxFloat doorOri[3])
 		cout << "ERROR: setKnobOrientation:: doorOri is null"<< endl;
 }
 
+
 void Manipulator::execute_motion()
 {
-	//execute the motion related function inside the simulation. 
-	//inputs: Joint handles, Joint types. 
-	//output: Motion executed. 
+	//execute the motion related function inside the simulation.  
+	// verify if the hand is close to the target. 
 	int inIntCount=0;
 	int *inInt= NULL;
-	int
-	result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "motionPlanning",
+	int outIntCount=1;
+	int *outInt=NULL;
+	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "motionPlanning",
 											0, NULL, 0, NULL, 0, NULL,0,NULL,
-											NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
+											0, NULL, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
+	if(result==simx_return_ok)
+	{
+		do
+		{
+			result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "finishMotion", 
+											0, NULL, 0, NULL, 0, NULL,0,NULL,
+											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+		}
+		while(outInt!= NULL &&*outInt ==1);		
+	}
+	if(outInt!=NULL &&*outInt ==0)
+	{
+		cout<< "Now the hand is close to the knob and the orientation is correct."<<endl;		
+	}
 }
