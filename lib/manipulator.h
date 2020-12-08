@@ -55,6 +55,8 @@ class Manipulator
 		void exec();
 		int get_JacoHandle();
 		int get_target1Handle();
+		//motion planning related methods
+		void motion_planning();
 		void execute_motion();
 };
 

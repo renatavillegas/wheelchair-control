@@ -88,6 +88,23 @@ void Manipulator::setKnobOrientation(simxFloat doorOri[3])
 		cout << "ERROR: setKnobOrientation:: doorOri is null"<< endl;
 }
 
+// Motion planning remote API related methods: 
+// calculate path. 
+void Manipulator::motion_planning()
+{
+	//inputs: None 
+	//outPuts: pathFound - 0=true, 1=false
+	int outIntCount=1;
+	int *outInt=NULL; 
+	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "motionPlanning",
+											0, NULL, 0, NULL, 0, NULL,0,NULL,
+											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	if(result==simx_return_ok && *outInt==0)
+	{
+		cout << "Motion path found."<< endl;
+	}	
+}
+
 
 void Manipulator::execute_motion()
 {
@@ -107,6 +124,7 @@ void Manipulator::execute_motion()
 			result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "finishMotion", 
 											0, NULL, 0, NULL, 0, NULL,0,NULL,
 											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+			cout << "Not so close yet. close = " << *outInt <<endl;
 		}
 		while(outInt!= NULL &&*outInt ==1);		
 	}

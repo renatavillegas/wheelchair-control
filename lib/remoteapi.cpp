@@ -253,8 +253,8 @@ void RemoteApi::approach_to_grasp()
 	
 }
 
-void RemoteApi::execute_motion()
+void RemoteApi::motion_planning()
 {
-	jaco.execute_motion();
+	jaco.motion_planning();
 }
 
