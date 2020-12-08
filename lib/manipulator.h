@@ -43,8 +43,11 @@ class Manipulator
     	int ikGroup;
     	int target0;
     	int target1;
+    	simxChar path; 
+		simxChar length; 
     	int jh[];
 		int jt[];
+
 	public:	
 		Manipulator(int id);
 		Manipulator();

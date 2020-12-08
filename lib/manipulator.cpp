@@ -93,15 +93,24 @@ void Manipulator::setKnobOrientation(simxFloat doorOri[3])
 void Manipulator::motion_planning()
 {
 	//inputs: None 
-	//outPuts: pathFound - 0=true, 1=false
+	//outPuts: pathFound - 0=true, 1=false ; 
+	//		   pathString(name of custom block which has the path table); lengthString (name of custom block which has the length table)
 	int outIntCount=1;
 	int *outInt=NULL; 
+	int outStringCount = 2; 
+	simxChar *outString;
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "motionPlanning",
 											0, NULL, 0, NULL, 0, NULL,0,NULL,
-											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
-	if(result==simx_return_ok && *outInt==0)
+											&outIntCount, &outInt, NULL , NULL, &outStringCount, &outString, NULL, NULL, simx_opmode_oneshot_wait);
+	if(result==simx_return_ok && *outInt==0 && outString!=NULL)
 	{
 		cout << "Motion path found."<< endl;
+		path = outString[0];
+		length = outString[1];
+		cout << "path Object name =" << path << endl; 
+		cout << "length Object name =" << length << endl; 
+
+
 	}	
 }
 
