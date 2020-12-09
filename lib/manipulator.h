@@ -43,10 +43,12 @@ class Manipulator
     	int ikGroup;
     	int target0;
     	int target1;
+    	int rmlHandle;
     	simxChar path; 
 		simxChar length; 
-    	int jh[];
-		int jt[];
+    	int jh[6];
+		int jt[6];
+		float jointsUpperVelocityLimits[];
 
 	public:	
 		Manipulator(int id);
@@ -60,7 +62,11 @@ class Manipulator
 		int get_target1Handle();
 		//motion planning related methods
 		void motion_planning();
+		void calculate_velocity_factor();
+		float get_simStepTime();
+		void get_jointsUpperVelocityLimits();
 		void execute_motion();
+		int get_rmlHandle();
 };
 
 
