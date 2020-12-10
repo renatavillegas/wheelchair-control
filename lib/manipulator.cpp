@@ -99,23 +99,18 @@ void Manipulator::setKnobOrientation(simxFloat doorOri[3])
 // calculate path. 
 void Manipulator::motion_planning()
 {
-	//inputs: None 
+	//inputs: None
 	//outPuts: pathFound - 0=true, 1=false ; 
-	//		   pathString(name of custom block which has the path table); lengthString (name of custom block which has the length table)
 	int outIntCount=1;
 	int *outInt=NULL; 
-	int outStringCount = 2; 
-	simxChar *outString;
+//	int outStringCount = 2; 
+//	simxChar *outString;
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "motionPlanning",
 											0, NULL, 0, NULL, 0, NULL,0,NULL,
-											&outIntCount, &outInt, NULL , NULL, &outStringCount, &outString, NULL, NULL, simx_opmode_oneshot_wait);
-	if(result==simx_return_ok && *outInt==0 && outString!=NULL)
+											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	if(result==simx_return_ok && *outInt==0)
 	{
 		cout << "Motion path found."<< endl;
-		path = outString[0];
-		length = outString[1];
-		cout << "path Object name =" << path << endl; 
-		cout << "length Object name =" << length << endl; 
 	}	
 }
 
@@ -136,51 +131,56 @@ void Manipulator::get_jointsUpperVelocityLimits()
 {
 	//inputs: joint handles; 
 	//outputs: joitUpperVelocityLimits, sucess; 
-	int inIntCount = 6; 
-	int *inInt = jh; 
+	int inIntCount = 1; 
+	int *inInt; 
 	int outIntCount = 1; 
 	int *outInt; 
-	int outFloatCount= 6; 
-	float *outFloat; 
-	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "getJointsUpperVelocityLimits",
+	int outFloatCount= 1; 
+	float *outFloat;
+	int result;
+	for(int i=0; i<6; i++)
+	{
+		*inInt = jh[i];
+		result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "getJointsUpperVelocityLimits",
 											inIntCount, inInt, 0, NULL, 0, NULL,0,NULL,
 											&outIntCount,&outInt, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
-	if(result == simx_return_ok && outFloat!=NULL && *outInt ==1)
-	{
-		for(int i =0; i<6;i++)
+		if(result == simx_return_ok && outFloat!=NULL && *outInt ==1)
 		{
-			jointsUpperVelocityLimits[i] = outFloat[i];
-			//cout << "joitUpperVelocityLimits= " << jointsUpperVelocityLimits[i]<<endl;
+							jointsUpperVelocityLimits[i] = outFloat[0];
+				cout << "joitUpperVelocityLimits= " << jointsUpperVelocityLimits[i]<<endl;
 		}
-	}
-	else 
-		cout << "ERROR: get_jointsUpperVelocityLimits failed." << endl;	
+		else 
+			cout << "ERROR: get_jointsUpperVelocityLimits failed." << endl;	
+	} 
+	
+	
 }
 // get rml handle to calculate the steps of the motion 
 int Manipulator::get_rmlHandle()
 {
-	//inputs: length string
+	//inputs: velCorrection
 	//outputs: rml handle
-	int inStringCount = 1;
-	simxChar *inString; 
-	inString[0] = length;
-	cout << "inString= "<< inString[0] << endl;
+	int inIntCount =1;
+	int *inInt; 
+	inInt[0] = 1;
 	int outIntCount = 1; 
 	int *outInt = NULL;
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "getRmlHandle",
-											0, NULL, 0, NULL, inStringCount, inString,0,NULL,
+											inIntCount, inInt, 0, NULL, 0, NULL,0,NULL,
 											&outIntCount,&outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
 	if(result == simx_return_ok && outInt !=NULL)
 	{
-		cout << "rmlHandle = " << endl;
+		cout << "rmlHandle = " << *outInt << endl;
+		return outInt[0];
 	}
-
+	cout << "ERROR: get_rmlHandle failed. "<< endl;
+	return -1;
 }
 // calculate the velocity correction factor
 void Manipulator::calculate_velocity_factor()
 {
-	//inputs: path, lengths, jh, velCorrection, . 
-	//outputs: rmax, res
+	//inputs: velCorrection 
+	//outputs:
 	int outIntCount =1; 
 	int *outInt;
 	int outFloatCount = 1; 
@@ -199,7 +199,7 @@ void Manipulator::calculate_velocity_factor()
 	cout << "dt = " << dt <<endl;
 	get_jointsUpperVelocityLimits();
 	float velCorrection =1; 
-	cout << "rmlHandle = " << get_rmlHandle() << endl;
+	cout << get_rmlHandle() << endl;
 	
 }
 

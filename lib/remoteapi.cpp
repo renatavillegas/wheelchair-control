@@ -255,7 +255,7 @@ void RemoteApi::approach_to_grasp()
 
 void RemoteApi::motion_planning()
 {
-	//jaco.motion_planning();
+	jaco.motion_planning();
 	jaco.calculate_velocity_factor(); 
 	jaco.get_jointsUpperVelocityLimits();
 }

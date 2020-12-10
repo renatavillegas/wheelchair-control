@@ -44,11 +44,10 @@ class Manipulator
     	int target0;
     	int target1;
     	int rmlHandle;
-    	simxChar path; 
-		simxChar length; 
     	int jh[6];
 		int jt[6];
 		float jointsUpperVelocityLimits[];
+
 
 	public:	
 		Manipulator(int id);
