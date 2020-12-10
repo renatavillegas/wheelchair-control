@@ -64,8 +64,9 @@ class Manipulator
 		void calculate_velocity_factor();
 		float get_simStepTime();
 		void get_jointsUpperVelocityLimits();
+		int execute_rmlStep(float posVelAccel[3], int rmlHandle);
 		void execute_motion();
-		int get_rmlHandle();
+		int get_rmlHandle(float velCorrection);
 };
 
 

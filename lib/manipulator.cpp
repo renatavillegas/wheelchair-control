@@ -146,7 +146,7 @@ void Manipulator::get_jointsUpperVelocityLimits()
 											&outIntCount,&outInt, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
 		if(result == simx_return_ok && outFloat!=NULL && *outInt ==1)
 		{
-							jointsUpperVelocityLimits[i] = outFloat[0];
+				jointsUpperVelocityLimits[i] = outFloat[0];
 				cout << "joitUpperVelocityLimits= " << jointsUpperVelocityLimits[i]<<endl;
 		}
 		else 
@@ -156,7 +156,7 @@ void Manipulator::get_jointsUpperVelocityLimits()
 	
 }
 // get rml handle to calculate the steps of the motion 
-int Manipulator::get_rmlHandle()
+int Manipulator::get_rmlHandle(float velCorrection)
 {
 	//inputs: velCorrection
 	//outputs: rml handle
@@ -174,6 +174,34 @@ int Manipulator::get_rmlHandle()
 		return outInt[0];
 	}
 	cout << "ERROR: get_rmlHandle failed. "<< endl;
+	return -1;
+}
+// execute a rmlStep 
+int Manipulator:: execute_rmlStep(float posVelAccel[3], int rmlHandle)
+{
+	//inputs: rmlHandle
+	//output: res(0: Final state not reached yet; 1: final state reached)
+	int inIntCount = 1;
+	int *inInt;
+	inInt[0]= rmlHandle;
+	int outIntCount = 1;
+	int *outInt;
+	int outFloatCount = 3;
+	float *outFloat;
+	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "executeRmlStep",
+											inIntCount, inInt, 0, NULL, 0, NULL,0,NULL,
+											&outIntCount,&outInt, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	if(result == simx_return_ok && outInt !=NULL && outFloat !=NULL)
+	{
+		cout << "res = " << outInt[0] << endl;
+		for(int i=0; i<outFloatCount;i++)
+		{
+			posVelAccel[i]=outFloat[i];
+			cout << posVelAccel[i] << endl;
+		}
+		return outInt[0];
+	}
+	cout << "ERROR: execute_rmlStep failed."<< endl;
 	return -1;
 }
 // calculate the velocity correction factor
@@ -199,8 +227,11 @@ void Manipulator::calculate_velocity_factor()
 	cout << "dt = " << dt <<endl;
 	get_jointsUpperVelocityLimits();
 	float velCorrection =1; 
-	cout << get_rmlHandle() << endl;
-	
+	rmlHandle = get_rmlHandle(velCorrection);
+	float posVelAccel[3]={-1,-1,-1};
+	int res = -1;
+	res = execute_rmlStep(posVelAccel, rmlHandle);
+	cout << posVelAccel[0]<< endl;
 }
 
 void Manipulator::execute_motion()
