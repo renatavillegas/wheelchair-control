@@ -46,7 +46,7 @@ class Manipulator
     	int rmlHandle;
     	int jh[6];
 		int jt[6];
-		float jointsUpperVelocityLimits[];
+		float jointsUpperVelocityLimits[6];
 
 
 	public:	
@@ -63,11 +63,12 @@ class Manipulator
 		void motion_planning();
 		void calculate_velocity_factor();
 		float get_simStepTime();
-		void get_jointsUpperVelocityLimits();
+		void get_jointsUpperVelocityLimits(float jointsUpperVelocityLimits[6]);
 		int execute_rmlStep(float posVelAccel[3], int rmlHandle);
 		void execute_motion();
 		int get_rmlHandle(float velCorrection);
-};
+		int get_lengthSize();
+};	
 
 
 

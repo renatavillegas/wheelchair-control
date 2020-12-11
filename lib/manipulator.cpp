@@ -9,6 +9,7 @@ Manipulator::Manipulator()
 	{
 		jh[i] =-1;
 		jt[i]=-1;
+		jointsUpperVelocityLimits[i]=-1;
 	}
 	jacoHandle= -1;
    	ikTarget=-1;
@@ -26,6 +27,7 @@ Manipulator::Manipulator(int ID)
 	{
 		jh[i] =-1;
 		jt[i]=-1;
+		jointsUpperVelocityLimits[i]=-1;
 	}
 	
 	// inputs: None 
@@ -127,7 +129,7 @@ float Manipulator::get_simStepTime()
 	cout << "ERROR: get_simStepTime failed."<<endl;
 }
 // get the max vel of each joint 
-void Manipulator::get_jointsUpperVelocityLimits()
+void Manipulator::get_jointsUpperVelocityLimits(float jointsUpperVelocityLimits[6])
 {
 	//inputs: joint handles; 
 	//outputs: joitUpperVelocityLimits, sucess; 
@@ -136,9 +138,10 @@ void Manipulator::get_jointsUpperVelocityLimits()
 	int outIntCount = 1; 
 	int *outInt; 
 	int outFloatCount= 1; 
-	float *outFloat;
+	float *outFloat = NULL;
 	int result;
-	for(int i=0; i<6; i++)
+	int i =0;
+	do
 	{
 		*inInt = jh[i];
 		result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "getJointsUpperVelocityLimits",
@@ -146,14 +149,14 @@ void Manipulator::get_jointsUpperVelocityLimits()
 											&outIntCount,&outInt, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
 		if(result == simx_return_ok && outFloat!=NULL && *outInt ==1)
 		{
-				jointsUpperVelocityLimits[i] = outFloat[0];
+				jointsUpperVelocityLimits[i] = *outFloat;
 				cout << "joitUpperVelocityLimits= " << jointsUpperVelocityLimits[i]<<endl;
 		}
 		else 
 			cout << "ERROR: get_jointsUpperVelocityLimits failed." << endl;	
-	} 
-	
-	
+		i++;
+	}
+	while(i<6);
 }
 // get rml handle to calculate the steps of the motion 
 int Manipulator::get_rmlHandle(float velCorrection)
@@ -162,7 +165,7 @@ int Manipulator::get_rmlHandle(float velCorrection)
 	//outputs: rml handle
 	int inIntCount =1;
 	int *inInt; 
-	inInt[0] = 1;
+	*inInt = 1;
 	int outIntCount = 1; 
 	int *outInt = NULL;
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "getRmlHandle",
@@ -171,7 +174,7 @@ int Manipulator::get_rmlHandle(float velCorrection)
 	if(result == simx_return_ok && outInt !=NULL)
 	{
 		cout << "rmlHandle = " << *outInt << endl;
-		return outInt[0];
+		return *outInt;
 	}
 	cout << "ERROR: get_rmlHandle failed. "<< endl;
 	return -1;
@@ -204,34 +207,40 @@ int Manipulator:: execute_rmlStep(float posVelAccel[3], int rmlHandle)
 	cout << "ERROR: execute_rmlStep failed."<< endl;
 	return -1;
 }
+//get path legth 
+int Manipulator::get_lengthSize()
+{
+	//inputs: None 
+	//Outputs: #length 
+	int outIntCount=1;
+	int *outInt = NULL;
+	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "getLengthSize",
+											0, NULL, 0, NULL, 0, NULL,0,NULL,
+											&outIntCount,&outInt, 0 , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	if(result == simx_return_ok && *outInt!=NULL && *outInt !=-1)
+		return *outInt;
+	cout <<("ERROR: get_lengthSize failed.")<< endl; 
+	return -1; 
+}
 // calculate the velocity correction factor
 void Manipulator::calculate_velocity_factor()
 {
-	//inputs: velCorrection 
-	//outputs:
-	int outIntCount =1; 
-	int *outInt;
-	int outFloatCount = 1; 
-	float *outFloat;
-
-/*	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "calculateCorrectionFactor",
-											0, NULL, 0, NULL, 0, NULL,0,NULL,
-											&outIntCount, &outInt, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
-	if(result == simx_return_ok && outFloat!=NULL && outInt !=NULL)
-	{
-		cout << "rmax=" << *outFloat<< endl;
-		cout << "res=" << *outInt<<endl;
-	}
-*/
+/*
 	float dt = get_simStepTime();
 	cout << "dt = " << dt <<endl;
-	get_jointsUpperVelocityLimits();
+	get_jointsUpperVelocityLimits(jointsUpperVelocityLimits);
 	float velCorrection =1; 
 	rmlHandle = get_rmlHandle(velCorrection);
 	float posVelAccel[3]={-1,-1,-1};
 	int res = -1;
 	res = execute_rmlStep(posVelAccel, rmlHandle);
 	cout << posVelAccel[0]<< endl;
+*/
+	int i=0;
+	int j=0;
+	int lengthSize = get_lengthSize();
+	cout << "lengthSize=" << lengthSize << endl;
+	return;
 }
 
 void Manipulator::execute_motion()
