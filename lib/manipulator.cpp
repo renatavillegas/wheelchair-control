@@ -105,14 +105,17 @@ void Manipulator::motion_planning()
 	//outPuts: pathFound - 0=true, 1=false ; 
 	int outIntCount=1;
 	int *outInt=NULL; 
+	int found;
 //	int outStringCount = 2; 
 //	simxChar *outString;
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "motionPlanning",
 											0, NULL, 0, NULL, 0, NULL,0,NULL,
 											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
-	if(result==simx_return_ok && *outInt==0)
+	if(result==simx_return_ok)
 	{
-		cout << "Motion path found."<< endl;
+		found = *outInt;
+		if(found == 1)
+			cout << "Motion path found."<< endl;
 	}	
 }
 
@@ -167,14 +170,17 @@ int Manipulator::get_rmlHandle(float velCorrection)
 	int *inInt; 
 	*inInt = 1;
 	int outIntCount = 1; 
-	int *outInt = NULL;
+	int *outInt;
+	int handle;
+	outInt = NULL;
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "getRmlHandle",
 											inIntCount, inInt, 0, NULL, 0, NULL,0,NULL,
 											&outIntCount,&outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
 	if(result == simx_return_ok && outInt !=NULL)
 	{
 		cout << "rmlHandle = " << *outInt << endl;
-		return *outInt;
+		handle = *outInt;
+		return handle;
 	}
 	cout << "ERROR: get_rmlHandle failed. "<< endl;
 	return -1;
@@ -213,11 +219,12 @@ int Manipulator::get_lengthSize()
 	//inputs: None 
 	//Outputs: #length 
 	int outIntCount=1;
-	int *outInt = NULL;
+	int *outInt;
+	outInt = NULL;
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "getLengthSize",
 											0, NULL, 0, NULL, 0, NULL,0,NULL,
 											&outIntCount,&outInt, 0 , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
-	if(result == simx_return_ok && *outInt!=NULL && *outInt !=-1)
+	if(result == simx_return_ok && outInt!=NULL && *outInt !=-1)
 		return *outInt;
 	cout <<("ERROR: get_lengthSize failed.")<< endl; 
 	return -1; 
@@ -236,11 +243,45 @@ void Manipulator::calculate_velocity_factor()
 	res = execute_rmlStep(posVelAccel, rmlHandle);
 	cout << posVelAccel[0]<< endl;
 */
-	int i=0;
-	int j=0;
+	int i=0; //path
+	int j=0; //joint
 	int lengthSize = get_lengthSize();
 	cout << "lengthSize=" << lengthSize << endl;
-	return;
+	int inIntCount = 4; 
+	int inInt[4] = {-1,-1,-1, -1};
+	int inFloatCount = 1; 
+	float velCorrection= 1.0;
+	float inFloat;
+	inFloat = velCorrection;
+	int outIntCount =1; 
+	int *outInt = 0;
+	int outFloatCount = 1; 
+	float *outFloat;
+	outFloat= NULL;
+	rmlHandle = get_rmlHandle(1);
+	inInt[3]= rmlHandle;
+	int result;
+	float r;
+	int res;
+	for(i=0; i<lengthSize-1; i++)
+	{
+		for(j=0;j<6;j++)
+		{
+			inInt[0] = jh[j];
+			inInt[1] = i+1;
+			inInt[2] = j+1;
+			result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "calculateCorrectionFactor2",
+											inIntCount, inInt, inFloatCount, &inFloat, 0, NULL,0,NULL,
+											&outIntCount,&outInt, &outFloatCount, &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+			if (result == simx_return_ok && outFloat != NULL)
+				r = *outFloat;
+				res = *outInt;
+				if(res==1)
+					break;
+				cout << "r = " <<r<< endl;
+		}
+	}
+	cout << "Get ouuttt" << endl;
 }
 
 void Manipulator::execute_motion()

@@ -169,10 +169,10 @@ void RemoteApi::path_following()
 											&outIntCount, &closeToTarget, &outFloatCount , &velocities, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
 		if (result == simx_return_ok && velocities != NULL)
 		{
-			cout << "closeToTarget = "<< *closeToTarget << endl;
+//			cout << "closeToTarget = "<< *closeToTarget << endl;
 			vl = velocities[0];
 			vr = velocities[1];
-			cout << "LeftV = " << vl <<", RightV = " << vr << endl;
+//			cout << "LeftV = " << vl <<", RightV = " << vr << endl;
 			//update velocities 
 			simxSetJointTargetVelocity(clientID, rightMotorHandle, vr, simx_opmode_oneshot);
 			simxSetJointTargetVelocity(clientID, leftMotorHandle, vl, simx_opmode_oneshot);
@@ -205,15 +205,17 @@ void RemoteApi::adjust_orientation()
 
 	//Outputs: Stop, vl, vr, prev_error, integral 
 	int outIntCount = 1;
-	int *stop =0;
+	int *outInt;
 	int outFloatCount =5;
 	float *outFloat;
 	float vl, vr;
+	int result;
+	int stop;
 	do
 	{
-		int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript, "adjusting_orientation",
+		result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript, "adjusting_orientation",
 											inIntCount, inInt, inFloatCount, inFloat, 0, NULL,0,NULL,
-											&outIntCount, &stop, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
+											&outIntCount, &outInt, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
 		if (result == simx_return_ok && outFloat != NULL)
 		{
 			vl = outFloat[0];
@@ -222,12 +224,13 @@ void RemoteApi::adjust_orientation()
 			integral = outFloat[3];
 			oldtime = outFloat[4];
 			cout << "LeftV = " << vl <<", RightV = " << vr << endl;
+			stop = *outInt;
 			//update velocities 
 			simxSetJointTargetVelocity(clientID, rightMotorHandle, vr, simx_opmode_oneshot);
 			simxSetJointTargetVelocity(clientID, leftMotorHandle, vl, simx_opmode_oneshot);
 		}
 	}
-	while(*stop == 0);
+	while(stop == 0);
 	cout << "The wheelchair now is in the correct position and orientation." << endl;
 }
 
@@ -257,5 +260,6 @@ void RemoteApi::motion_planning()
 {
 	jaco.motion_planning();
 	jaco.calculate_velocity_factor(); 
+	return;
 }
 
