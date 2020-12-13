@@ -61,6 +61,9 @@ void RemoteApi::initialize_objects()
 							 == simx_return_ok?cout<<"Camera frame Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);
 		(simxGetObjectHandle(clientID, "GoalCameraDummy", &goalCameraDummyHandle, simx_opmode_oneshot_wait)
 							 == simx_return_ok?cout<<"Camera frame Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);		
+		(simxGetObjectHandle(clientID, "_doorJoint", &doorJointHandle, simx_opmode_oneshot_wait)
+							 == simx_return_ok?cout<<"Door joint Connected"<<endl:cout<<"ERROR: Camera frame Connection Failed"<<endl);		
+
 		jaco = Manipulator(clientID);
 		//execute_motion();
 }
@@ -162,6 +165,7 @@ void RemoteApi::path_following()
 	float vr = 0;
 	float vl =0; 
 	float *velocities;
+
 	do
 	{
 		int result = simxCallScriptFunction(clientID, "autodrive2", sim_scripttype_childscript, "path_following",
@@ -238,7 +242,8 @@ void RemoteApi::preapre_motion()
 {
 	//set the target position/orientation of the manipulator based on the door position
 	//To avoid colision between the knob and the fingers of the manipulator:
-	//Do a first approach and adjust the orientation.  
+	//Do a first approach and adjust the orientation. 
+ 
 	simxFloat doorPos[3];
 	simxFloat doorOri[3];
 	if (simxGetObjectPosition(clientID, doorHandle, -1, doorPos, simx_opmode_oneshot_wait)!=simx_return_ok)

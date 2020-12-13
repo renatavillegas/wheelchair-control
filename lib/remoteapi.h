@@ -58,6 +58,7 @@ class RemoteApi
 		int collidableForPathPlanningHandle;
 		int obstaclesHandle;
 		int planningTaskHandle; 
+		int doorJointHandle;
 		simxFloat TagQuaternion[4];
 		simxFloat TagPosition[3];
 		Marker realTag;
