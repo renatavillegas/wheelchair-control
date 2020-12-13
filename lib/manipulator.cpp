@@ -69,9 +69,9 @@ void Manipulator::setKnobPosition(simxFloat doorPos[3])
 	//experimental shift; 
 	if (doorPos!=NULL)
 	{
-		targetPos[0]= doorPos[0] + 0.05;
-		targetPos[1]= doorPos[1] - 0.1;
-		targetPos[2]= doorPos[2] -0.07;
+		targetPos[0]= doorPos[0] - 0.01;
+		targetPos[1]= doorPos[1] - 0.12;
+		targetPos[2]= doorPos[2] -0.1;
 		int result = simxSetObjectPosition(clientID, target1, -1, targetPos,simx_opmode_oneshot_wait);
 		if (result!=simx_return_ok)
 			cout<< "ERROR: setKnobPosition Failed"<< endl;
