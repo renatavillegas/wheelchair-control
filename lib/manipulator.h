@@ -59,6 +59,7 @@ class Manipulator
 		void exec();
 		int get_JacoHandle();
 		int get_target1Handle();
+
 		//motion planning related methods
 		void motion_planning();
 		void calculate_velocity_factor();
@@ -68,6 +69,8 @@ class Manipulator
 		void execute_motion();
 		int get_rmlHandle(float velCorrection);
 		int get_lengthSize();
+		int get_pathSize();
+		void follow_path();
 };	
 
 

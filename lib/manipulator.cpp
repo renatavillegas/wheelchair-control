@@ -70,7 +70,7 @@ void Manipulator::setKnobPosition(simxFloat doorPos[3])
 	if (doorPos!=NULL)
 	{
 		targetPos[0]= doorPos[0] - 0.01;
-		targetPos[1]= doorPos[1] - 0.12;
+		targetPos[1]= doorPos[1] - 0.15;
 		targetPos[2]= doorPos[2] -0.1;
 		int result = simxSetObjectPosition(clientID, target1, -1, targetPos,simx_opmode_oneshot_wait);
 		if (result!=simx_return_ok)
@@ -214,7 +214,7 @@ int Manipulator:: execute_rmlStep(float posVelAccel[3], int rmlHandle)
 	cout << "ERROR: execute_rmlStep failed."<< endl;
 	return -1;
 }
-//get path legth 
+//get legths size  
 int Manipulator::get_lengthSize()
 {
 	//inputs: None 
@@ -229,6 +229,24 @@ int Manipulator::get_lengthSize()
 		return *outInt;
 	cout <<("ERROR: get_lengthSize failed.")<< endl; 
 	return -1; 
+}
+// get path size 
+int Manipulator::get_pathSize()
+{
+	//inputs: None 
+	//outputs: path size
+	int outIntCount=1;
+	int *outInt;
+	int size = -1;
+	outInt = NULL;
+	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "getPathSize",
+											0, NULL, 0, NULL, 0, NULL,0,NULL,
+											&outIntCount,&outInt, 0 , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	if(result == simx_return_ok && outInt!=NULL && *outInt !=-1)
+		size = *outInt;
+	else 
+		cout <<("ERROR: get_pathSize failed.")<< endl; 
+	return size; 
 }
 // calculate the velocity correction factor
 void Manipulator::calculate_velocity_factor()
@@ -310,4 +328,46 @@ void Manipulator::execute_motion()
 	{
 		cout<< "Now the hand is close to the knob and the orientation is correct."<<endl;		
 	}
+}
+
+void Manipulator::follow_path()
+{
+	//Each path point is a robot configuration.
+	int l = get_pathSize();
+	cout << "path size = " << l;
+	//get the config of all of the joints on the path position 
+	int j = 0;
+	//inputs: point on path (j)
+	//outputs: config of all joints in this point
+	int inIntCount = 1;
+	int outFloatCount = 6;
+	int inInt = j;
+	float *outFloat;
+	outFloat=NULL;
+	float configs[6]= {-1,-1,-1,-1,-1,-1};
+	int result;
+	do
+	{
+			result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "followPath2", 
+											inIntCount, &inInt, 0, NULL, 0, NULL,0,NULL,
+											0, NULL, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+			if(result== simx_return_ok && outFloat != NULL)
+			{
+				for(int i =0;i<outFloatCount;i++)
+				{
+					configs[i]= outFloat[i];
+					cout << "config " << i << " = " << configs[i] << endl;
+					cout << "jh " << i << jh[i] << endl;
+					if (configs[i]!=-111) 
+						result = simxSetJointTargetPosition(clientID, jh[i],configs[i],simx_opmode_oneshot);
+					if(result != simx_return_ok)
+						cout<< "something wrong on SetJointTargetVelocity" <<endl;
+				}
+					
+			}
+			inInt++;
+	}
+		while(inInt<l/6);		
+
+
 }
