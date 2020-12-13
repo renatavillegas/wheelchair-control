@@ -104,14 +104,15 @@ void Manipulator::motion_planning()
 	//inputs: None
 	//outPuts: pathFound - 0=true, 1=false ; 
 	int outIntCount=1;
-	int *outInt=NULL; 
+	int *outInt;
+	outInt=NULL; 
 	int found;
 //	int outStringCount = 2; 
 //	simxChar *outString;
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "motionPlanning",
 											0, NULL, 0, NULL, 0, NULL,0,NULL,
 											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
-	if(result==simx_return_ok)
+	if(result==simx_return_ok && outInt!=NULL)
 	{
 		found = *outInt;
 		if(found == 1)
@@ -232,17 +233,6 @@ int Manipulator::get_lengthSize()
 // calculate the velocity correction factor
 void Manipulator::calculate_velocity_factor()
 {
-/*
-	float dt = get_simStepTime();
-	cout << "dt = " << dt <<endl;
-	get_jointsUpperVelocityLimits(jointsUpperVelocityLimits);
-	float velCorrection =1; 
-	rmlHandle = get_rmlHandle(velCorrection);
-	float posVelAccel[3]={-1,-1,-1};
-	int res = -1;
-	res = execute_rmlStep(posVelAccel, rmlHandle);
-	cout << posVelAccel[0]<< endl;
-*/
 	int i=0; //path
 	int j=0; //joint
 	int lengthSize = get_lengthSize();
@@ -258,16 +248,17 @@ void Manipulator::calculate_velocity_factor()
 	int outFloatCount = 1; 
 	float *outFloat;
 	outFloat= NULL;
-	rmlHandle = get_rmlHandle(1);
+	rmlHandle = get_rmlHandle(velCorrection);
 	inInt[3]= rmlHandle;
 	int result;
-	float r;
-	int res;
-	for(i=0; i<lengthSize-1; i++)
+	float r=0;
+	int res=0;
+	for(i=0; i<lengthSize-2 && res==0; i++)
 	{
-		for(j=0;j<6;j++)
+		for(j=0;j<6 && res==0;j++)
 		{
 			inInt[0] = jh[j];
+			cout << "j= " << j;
 			inInt[1] = i+1;
 			inInt[2] = j+1;
 			result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "calculateCorrectionFactor2",
@@ -276,10 +267,19 @@ void Manipulator::calculate_velocity_factor()
 			if (result == simx_return_ok && outFloat != NULL)
 				r = *outFloat;
 				res = *outInt;
-				if(res==1)
-					break;
+				// if(res==1)
+				//{
+				//	cout << "get out 1 " << endl;
+				//	break;
+				//}
+
 				cout << "r = " <<r<< endl;
 		}
+		//if(res==1)
+		//{	
+		//	cout << "get out 2" << endl;
+		//	break;
+		//}
 	}
 	cout << "Get ouuttt" << endl;
 }

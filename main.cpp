@@ -81,13 +81,12 @@ int main (int argc,char *argv[])
 					simulation.adjust_orientation();
 					simulation.preapre_motion();
 					simulation.motion_planning();
-					cout << "motion planning done";
+					cout << "motion planning done"<<endl;
 			    }	
 			}
 		}
-
 	}
-
+	terminate();
 	//now we have to start the thread to find the marker and follow it.
 	//and the tread to start simulation and follow it. 
 	return 0;
