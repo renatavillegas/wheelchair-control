@@ -368,6 +368,15 @@ void Manipulator::follow_path()
 			inInt++;
 	}
 		while(inInt<l/6);		
+}
 
+void Manipulator::close_hand()
+{
+	//inputs: None 
+	//output: None
+	//Just creates 
+	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "closeHand", 
+										0, NULL, 0, NULL, 0, NULL,0,NULL,
+										NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
 
 }

@@ -71,6 +71,7 @@ class Manipulator
 		int get_lengthSize();
 		int get_pathSize();
 		void follow_path();
+		void close_hand();
 };	
 
 
