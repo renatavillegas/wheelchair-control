@@ -17,6 +17,7 @@ Manipulator::Manipulator()
     ikGroup= -1;
     target0= -1;
     target1=-1;
+    target2=-1;
     rmlHandle = -1;
 }
 
@@ -33,7 +34,7 @@ Manipulator::Manipulator(int ID)
 	// inputs: None 
 	// outputs: joint handles, joint types, 
 	//			jacoHandle, ikTarget, ikTip, ikGroup, target0, target1;			
-	int outIntCount = 18;
+	int outIntCount = 19;
 	int *outInt; 
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "initializeJaco",
 											0, NULL,0, NULL, 0, NULL,0,NULL,
@@ -51,6 +52,7 @@ Manipulator::Manipulator(int ID)
     ikGroup= outInt[15];
     target0= outInt[16];
     target1=outInt[17];
+    target2=outInt[18];
     rmlHandle = -1;
 }
 
@@ -65,16 +67,25 @@ int Manipulator::get_target1Handle()
 
 void Manipulator::setKnobPosition(simxFloat doorPos[3])
 {
-	simxFloat targetPos[3];
+	// set the targets position to do the planning
+	simxFloat target1Pos[3];
+	simxFloat target2Pos[3];
 	//experimental shift; 
 	if (doorPos!=NULL)
 	{
-		targetPos[0]= doorPos[0] - 0.01;
-		targetPos[1]= doorPos[1] - 0.11;
-		targetPos[2]= doorPos[2] -0.1;
-		int result = simxSetObjectPosition(clientID, target1, -1, targetPos,simx_opmode_oneshot_wait);
+		target1Pos[0]= doorPos[0] - 0.07;
+		target1Pos[1]= doorPos[1] - 0.05;
+		target1Pos[2]= doorPos[2] -0.1;
+		target2Pos[0]= target1Pos[0];
+		target2Pos[1]= target1Pos[1];
+		target2Pos[2]= target1Pos[2];
+		int result = simxSetObjectPosition(clientID, target1, -1, target1Pos,simx_opmode_oneshot_wait);
 		if (result!=simx_return_ok)
-			cout<< "ERROR: setKnobPosition Failed"<< endl;
+			cout<< "ERROR: setKnobPosition target 1 Failed"<< endl;
+		result = simxSetObjectPosition(clientID, target2, -1, target1Pos,simx_opmode_oneshot_wait);
+		if (result!=simx_return_ok)
+			cout<< "ERROR: setKnobPosition target 2 Failed"<< endl;
+
 	}
 	else
 		cout << "ERROR: setKnobPosition:: doorPos is null"<< endl;
@@ -84,14 +95,22 @@ void Manipulator::setKnobOrientation(simxFloat doorOri[3])
 {
 	if (doorOri!=NULL)
 	{
-		simxFloat targetOri[3];
-		targetOri[0]=doorOri[0];
-		targetOri[1]= doorOri[1];
-		targetOri[2]= doorOri[2] - 1.57;
+		simxFloat target1Ori[3];
+		simxFloat target2Ori[3];
 
-		int result = simxSetObjectOrientation(clientID, target1, -1, targetOri,simx_opmode_oneshot_wait);
+		target1Ori[0]=doorOri[0];
+		target1Ori[1]= doorOri[1];
+		target1Ori[2]= doorOri[2] - 1.57;
+		target2Ori[0]=target1Ori[0];
+		target2Ori[1]=target1Ori[1];
+		target2Ori[2]=target1Ori[2];
+
+		int result = simxSetObjectOrientation(clientID, target1, -1, target1Ori,simx_opmode_oneshot_wait);
 		if (result!=simx_return_ok)
-			cout<< "ERROR: setKnobOrientation Failed"<< endl;
+			cout<< "ERROR: setKnobOrientation target1 Failed"<< endl;
+		result = simxSetObjectOrientation(clientID, target1, -1, target1Ori,simx_opmode_oneshot_wait);
+		if (result!=simx_return_ok)
+			cout<< "ERROR: setKnobOrientation target2 Failed"<< endl;
 	}
 	else
 		cout << "ERROR: setKnobOrientation:: doorOri is null"<< endl;

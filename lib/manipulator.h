@@ -43,6 +43,7 @@ class Manipulator
     	int ikGroup;
     	int target0;
     	int target1;
+    	int target2;
     	int rmlHandle;
     	int jh[6];
 		int jt[6];
