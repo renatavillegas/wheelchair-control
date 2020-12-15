@@ -73,6 +73,7 @@ class Manipulator
 		void follow_path(int pathID);
 		void approach();
 		void close_hand();
+		void open_door();
 };	
 
 
