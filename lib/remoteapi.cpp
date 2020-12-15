@@ -264,7 +264,9 @@ void RemoteApi::approach_to_grasp()
 void RemoteApi::motion_planning()
 {
 	jaco.motion_planning();
-	jaco.follow_path();
+	jaco.follow_path(1);
+	jaco.approach();
+	jaco.follow_path(2);
 	jaco.close_hand();
 }
 

@@ -63,15 +63,15 @@ class Manipulator
 
 		//motion planning related methods
 		void motion_planning();
-		void calculate_velocity_factor();
 		float get_simStepTime();
 		void get_jointsUpperVelocityLimits(float jointsUpperVelocityLimits[6]);
 		int execute_rmlStep(float posVelAccel[3], int rmlHandle);
 		void execute_motion();
 		int get_rmlHandle(float velCorrection);
 		int get_lengthSize();
-		int get_pathSize();
-		void follow_path();
+		int get_pathSize(int pathID);
+		void follow_path(int pathID);
+		void approach();
 		void close_hand();
 };	
 

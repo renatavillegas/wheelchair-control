@@ -73,16 +73,16 @@ void Manipulator::setKnobPosition(simxFloat doorPos[3])
 	//experimental shift; 
 	if (doorPos!=NULL)
 	{
-		target1Pos[0]= doorPos[0] - 0.07;
+		target1Pos[0]= doorPos[0] - 0.12;
 		target1Pos[1]= doorPos[1] - 0.05;
 		target1Pos[2]= doorPos[2] -0.1;
 		target2Pos[0]= target1Pos[0];
 		target2Pos[1]= target1Pos[1];
-		target2Pos[2]= target1Pos[2];
+		target2Pos[2]= target1Pos[2] - 0.07;
 		int result = simxSetObjectPosition(clientID, target1, -1, target1Pos,simx_opmode_oneshot_wait);
 		if (result!=simx_return_ok)
 			cout<< "ERROR: setKnobPosition target 1 Failed"<< endl;
-		result = simxSetObjectPosition(clientID, target2, -1, target1Pos,simx_opmode_oneshot_wait);
+		result = simxSetObjectPosition(clientID, target2, -1, target2Pos,simx_opmode_oneshot_wait);
 		if (result!=simx_return_ok)
 			cout<< "ERROR: setKnobPosition target 2 Failed"<< endl;
 
@@ -108,7 +108,7 @@ void Manipulator::setKnobOrientation(simxFloat doorOri[3])
 		int result = simxSetObjectOrientation(clientID, target1, -1, target1Ori,simx_opmode_oneshot_wait);
 		if (result!=simx_return_ok)
 			cout<< "ERROR: setKnobOrientation target1 Failed"<< endl;
-		result = simxSetObjectOrientation(clientID, target1, -1, target1Ori,simx_opmode_oneshot_wait);
+		result = simxSetObjectOrientation(clientID, target2, -1, target2Ori,simx_opmode_oneshot_wait);
 		if (result!=simx_return_ok)
 			cout<< "ERROR: setKnobOrientation target2 Failed"<< endl;
 	}
@@ -250,16 +250,18 @@ int Manipulator::get_lengthSize()
 	return -1; 
 }
 // get path size 
-int Manipulator::get_pathSize()
+int Manipulator::get_pathSize(int pathID)
 {
-	//inputs: None 
+	//inputs: pathID
+	int inIntCount =1;
+	int inInt = pathID;
 	//outputs: path size
 	int outIntCount=1;
 	int *outInt;
 	int size = -1;
 	outInt = NULL;
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "getPathSize",
-											0, NULL, 0, NULL, 0, NULL,0,NULL,
+											inIntCount, &inInt, 0, NULL, 0, NULL,0,NULL,
 											&outIntCount,&outInt, 0 , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
 	if(result == simx_return_ok && outInt!=NULL && *outInt !=-1)
 		size = *outInt;
@@ -267,108 +269,28 @@ int Manipulator::get_pathSize()
 		cout <<("ERROR: get_pathSize failed.")<< endl; 
 	return size; 
 }
-// calculate the velocity correction factor
-void Manipulator::calculate_velocity_factor()
-{
-	int i=0; //path
-	int j=0; //joint
-	int lengthSize = get_lengthSize();
-	cout << "lengthSize=" << lengthSize << endl;
-	int inIntCount = 4; 
-	int inInt[4] = {-1,-1,-1, -1};
-	int inFloatCount = 1; 
-	float velCorrection= 1.0;
-	float inFloat;
-	inFloat = velCorrection;
-	int outIntCount =1; 
-	int *outInt = 0;
-	int outFloatCount = 1; 
-	float *outFloat;
-	outFloat= NULL;
-	rmlHandle = get_rmlHandle(velCorrection);
-	inInt[3]= rmlHandle;
-	int result;
-	float r=0;
-	int res=0;
-	for(i=0; i<lengthSize-2 && res==0; i++)
-	{
-		for(j=0;j<6 && res==0;j++)
-		{
-			inInt[0] = jh[j];
-			cout << "j= " << j;
-			inInt[1] = i+1;
-			inInt[2] = j+1;
-			result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "calculateCorrectionFactor2",
-											inIntCount, inInt, inFloatCount, &inFloat, 0, NULL,0,NULL,
-											&outIntCount,&outInt, &outFloatCount, &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
-			if (result == simx_return_ok && outFloat != NULL)
-				r = *outFloat;
-				res = *outInt;
-				// if(res==1)
-				//{
-				//	cout << "get out 1 " << endl;
-				//	break;
-				//}
 
-				cout << "r = " <<r<< endl;
-		}
-		//if(res==1)
-		//{	
-		//	cout << "get out 2" << endl;
-		//	break;
-		//}
-	}
-	cout << "Get ouuttt" << endl;
-}
 
-void Manipulator::execute_motion()
-{
-	//execute the motion related function inside the simulation.  
-	// verify if the hand is close to the target. 
-	int inIntCount=0;
-	int *inInt= NULL;
-	int outIntCount=1;
-	int *outInt=NULL;
-	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "motionPlanning",
-											0, NULL, 0, NULL, 0, NULL,0,NULL,
-											0, NULL, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
-	if(result==simx_return_ok)
-	{
-		do
-		{
-			result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "finishMotion", 
-											0, NULL, 0, NULL, 0, NULL,0,NULL,
-											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
-			cout << "Not so close yet. close = " << *outInt <<endl;
-		}
-		while(outInt!= NULL &&*outInt ==1);		
-	}
-	if(outInt!=NULL &&*outInt ==0)
-	{
-		cout<< "Now the hand is close to the knob and the orientation is correct."<<endl;		
-	}
-}
-
-void Manipulator::follow_path()
+void Manipulator::follow_path(int pathID)
 {
 	//Each path point is a robot configuration.
-	int l = get_pathSize();
+	int l = get_pathSize(pathID);
 	cout << "path size = " << l;
 	//get the config of all of the joints on the path position 
 	int j = 0;
 	//inputs: point on path (j)
 	//outputs: config of all joints in this point
-	int inIntCount = 1;
+	int inIntCount = 2;
 	int outFloatCount = 6;
-	int inInt = j;
+	int inInt[2] = {j,pathID};
 	float *outFloat;
 	outFloat=NULL;
 	float configs[6]= {-1,-1,-1,-1,-1,-1};
 	int result;
 	do
 	{
-			result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "followPath2", 
-											inIntCount, &inInt, 0, NULL, 0, NULL,0,NULL,
+			result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "followPath", 
+											inIntCount, inInt, 0, NULL, 0, NULL,0,NULL,
 											0, NULL, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
 			if(result== simx_return_ok && outFloat != NULL)
 			{
@@ -384,9 +306,31 @@ void Manipulator::follow_path()
 				}
 					
 			}
-			inInt++;
+			inInt[0]++;
 	}
-		while(inInt<l/6);		
+		while(inInt[0]<l/6);
+}
+
+void Manipulator::approach()
+{
+	//inputs: None
+	//outPuts: pathFound - 0=true, 1=false ; 
+	int outIntCount=1;
+	int *outInt;
+	outInt=NULL; 
+	int found;
+	//	int outStringCount = 2; 
+	//	simxChar *outString;
+	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "approach",
+											0, NULL, 0, NULL, 0, NULL,0,NULL,
+											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	if(result==simx_return_ok && outInt!=NULL)
+	{
+		found = *outInt;
+		if(found == 1)
+			cout << "Approach path found."<< endl;
+	}	
+
 }
 
 void Manipulator::close_hand()
@@ -397,5 +341,6 @@ void Manipulator::close_hand()
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "closeHand", 
 										0, NULL, 0, NULL, 0, NULL,0,NULL,
 										NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	cout << "Hand closed." << endl;
 
 }
