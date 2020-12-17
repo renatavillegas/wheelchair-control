@@ -76,9 +76,9 @@ void Manipulator::setKnobPosition(simxFloat doorPos[3])
 		target1Pos[0]= doorPos[0] - 0.08;
 		target1Pos[1]= doorPos[1] - 0.05;
 		target1Pos[2]= doorPos[2] -0.1;
-		target2Pos[0]= target1Pos[0];
+		target2Pos[0]= target1Pos[0]+ 0.01;
 		target2Pos[1]= target1Pos[1];
-		target2Pos[2]= target1Pos[2] - 0.03;
+		target2Pos[2]= target1Pos[2] - 0.07;
 		int result = simxSetObjectPosition(clientID, target1, -1, target1Pos,simx_opmode_oneshot_wait);
 		if (result!=simx_return_ok)
 			cout<< "ERROR: setKnobPosition target 1 Failed"<< endl;
@@ -102,7 +102,7 @@ void Manipulator::setKnobOrientation(simxFloat doorOri[3])
 		target1Ori[1]= doorOri[1];
 		target1Ori[2]= doorOri[2] - 1.57;
 		target2Ori[0]=target1Ori[0];
-		target2Ori[1]=target1Ori[1];
+		target2Ori[1]=target1Ori[1]+ 0.03;
 		target2Ori[2]=target1Ori[2];
 
 		int result = simxSetObjectOrientation(clientID, target1, -1, target1Ori,simx_opmode_oneshot_wait);
@@ -309,6 +309,7 @@ void Manipulator::follow_path(int pathID)
 			inInt[0]++;
 	}
 		while(inInt[0]<l/6);
+	cout << "We are close to the knob, start approach." << endl;
 }
 
 void Manipulator::approach()
@@ -360,6 +361,6 @@ void Manipulator::open_door()
 	{
 		found = *outInt;
 		if(found == 1)
-			cout << "Approach path found."<< endl;
+			cout << "Open door path found."<< endl;
 	}	
 }
