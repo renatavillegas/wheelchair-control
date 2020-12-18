@@ -342,7 +342,8 @@ void Manipulator::close_hand()
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "closeHand", 
 										0, NULL, 0, NULL, 0, NULL,0,NULL,
 										NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
-	cout << "Hand closed." << endl;
+	if(result == simx_return_ok)
+		cout << "Hand closed." << endl;
 
 }
 
