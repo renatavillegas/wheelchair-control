@@ -74,6 +74,7 @@ class Manipulator
 		void approach();
 		void close_hand();
 		void open_door();
+		void push();
 };	
 
 

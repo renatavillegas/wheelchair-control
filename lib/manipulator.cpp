@@ -365,3 +365,22 @@ void Manipulator::open_door()
 			cout << "Open door path found."<< endl;
 	}	
 }
+
+void Manipulator::push()
+{
+	//inputs: None
+	//outPuts: pathFound - 0=true, 1=false ; 
+	int outIntCount=1;
+	int *outInt;
+	outInt=NULL; 
+	int found=0;
+	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "pushMotionPlanning",
+											0, NULL, 0, NULL, 0, NULL,0,NULL,
+											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	if(result==simx_return_ok && outInt!=NULL)
+	{
+		found = *outInt;
+		if(found == 1)
+			cout << "Push door path found."<< endl;
+	}	
+}
