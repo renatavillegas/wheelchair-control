@@ -107,7 +107,7 @@ void RemoteApi::set_tag_position(Marker tag)
 	if (simxGetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot_wait)!=simx_return_ok)
 		cout<< "ERROR: get goal position failed."<< endl;
 	goalPos[0]=doorPos[0]-0.3;
-	goalPos[1]=doorPos[1]-0.7;
+	goalPos[1]=doorPos[1]-0.8;
 	simxSetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot);
 	// change the door orientation based on the camera capture. 
 	if (simxGetObjectOrientation(clientID, doorHandle, cameraDummyHandle, doorOri, simx_opmode_oneshot_wait)!=simx_return_ok)

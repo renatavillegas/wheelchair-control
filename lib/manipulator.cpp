@@ -74,7 +74,7 @@ void Manipulator::setKnobPosition(simxFloat doorPos[3])
 	if (doorPos!=NULL)
 	{
 		target1Pos[0]= doorPos[0] - 0.08;
-		target1Pos[1]= doorPos[1] - 0.05;
+		target1Pos[1]= doorPos[1] - 0.1;
 		target1Pos[2]= doorPos[2] -0.1;
 		target2Pos[0]= target1Pos[0]+ 0.01;
 		target2Pos[1]= target1Pos[1];

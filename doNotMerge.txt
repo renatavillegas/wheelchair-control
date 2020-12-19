@@ -99,3 +99,38 @@ function sysCall_threadmain()
 --            sim.switchThread()
 --        end
 end
+
+
+pushMotionPlanning = function()
+    local target3 = sim.getObjectHandle("jacoTarget3")
+    local target2 = sim.getObjectHandle("jacoTarget2")
+    local doorKnob = sim.getObjectHandle("_doorJoint")
+    local doorKnobPos = sim.getJointPosition(doorKnob)
+    local doorKnobPosNew= doorKnobPos+0.25
+    sim.setJointPosition(doorKnob, doorKnobPosNew)
+    local currPos = sim.getObjectPosition(sim.getObjectHandle("Jaco_target"), -1)
+    target3Pos={}
+    target3Pos[1] = currPos[1]
+    target3Pos[2] = currPos[2] + 0.19
+    target3Pos[3] = currPos[3]
+    sim.setObjectPosition(target3, -1, target3Pos)
+    sim.setObjectOrientation(target3,-1,sim.getObjectOrientation(target2,-1))
+
+    ikSteps = 20 
+    ikGroup2=sim.getIkGroupHandle('Jaco_ik2')
+    local currentConfig=getConfig()
+    goalPose = sim.getObjectMatrix(target3, -1)
+    sim.setObjectMatrix(ikTarget,-1,goalPose)
+    local c=sim.generateIkPath(ikGroup2,jh,ikSteps,nil)
+    --setConfig(currentConfig)
+    pathFound =0
+    if c then
+            lengths = generatePathLengths(c)
+            savePath('jacoPath_4',c, lengths)
+            visualizePath(c)
+            pathFound=1
+            print ("pushMotion path found.")
+    end
+
+return {pathFound},{},{},''
+end
