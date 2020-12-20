@@ -297,8 +297,8 @@ void Manipulator::follow_path(int pathID)
 				for(int i =0;i<outFloatCount;i++)
 				{
 					configs[i]= outFloat[i];
-					cout << "config " << i << " = " << configs[i] << endl;
-					cout << "jh " << i << jh[i] << endl;
+					//cout << "config " << i << " = " << configs[i] << endl;
+					//cout << "jh " << i << jh[i] << endl;
 					if (configs[i]!=-111) 
 						result = simxSetJointTargetPosition(clientID, jh[i],configs[i],simx_opmode_oneshot);
 					if(result != simx_return_ok)
@@ -309,7 +309,6 @@ void Manipulator::follow_path(int pathID)
 			inInt[0]++;
 	}
 		while(inInt[0]<l/6);
-	cout << "We are close to the knob, start approach." << endl;
 }
 
 void Manipulator::approach()
@@ -338,7 +337,6 @@ void Manipulator::close_hand()
 {
 	//inputs: None 
 	//output: None
-	//Just creates 
 	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "closeHand", 
 										0, NULL, 0, NULL, 0, NULL,0,NULL,
 										NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
@@ -383,4 +381,16 @@ void Manipulator::push()
 		if(found == 1)
 			cout << "Push door path found."<< endl;
 	}	
+}
+
+void Manipulator::open_hand()
+{
+	//inputs: None 
+	//output: None
+	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "openHand", 
+										0, NULL, 0, NULL, 0, NULL,0,NULL,
+										NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	if(result == simx_return_ok)
+		cout << "Hand opened." << endl;
+
 }

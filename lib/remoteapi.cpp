@@ -272,5 +272,6 @@ void RemoteApi::motion_planning()
 	jaco.follow_path(3);
 	jaco.push();
 	jaco.follow_path(4);
+	jaco.open_hand();
 }
 
