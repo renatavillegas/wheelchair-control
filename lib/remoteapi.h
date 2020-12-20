@@ -76,7 +76,6 @@ class RemoteApi
 		void adjust_orientation();
 		void preapre_motion();
 		void motion_planning();
-		void approach_to_grasp();
 		void execute_motion();
 };
 

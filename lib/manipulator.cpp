@@ -394,3 +394,27 @@ void Manipulator::open_hand()
 		cout << "Hand opened." << endl;
 
 }
+
+void Manipulator::return_to_start_position()
+{
+	//We have a target0 that holds the initial position and orientation. 
+	//When the open movement is finished, return to that position and orientation. 
+		//inputs: None
+	//outPuts: pathFound - 0=true, 1=false ; 
+	int outIntCount=1;
+	int *outInt;
+	outInt=NULL; 
+	int found;
+	//	int outStringCount = 2; 
+	//	simxChar *outString;
+	int result = simxCallScriptFunction(clientID, "Jaco", sim_scripttype_childscript, "returnToStartPosition",
+											0, NULL, 0, NULL, 0, NULL,0,NULL,
+											&outIntCount, &outInt, NULL , NULL, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
+	if(result==simx_return_ok && outInt!=NULL)
+	{
+		found = *outInt;
+		if(found == 1)
+			cout << "Return to start position path found."<< endl;
+	}	
+
+}

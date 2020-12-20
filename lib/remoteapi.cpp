@@ -254,13 +254,6 @@ void RemoteApi::preapre_motion()
 	jaco.setKnobOrientation(doorOri);
 }
 
-void RemoteApi::approach_to_grasp()
-{
-	// when the arm is in the correct position, just move on y(reference on simulation world)
-	// to initiate the grasping. 
-	
-}
-
 void RemoteApi::motion_planning()
 {
 	jaco.motion_planning();
@@ -273,5 +266,7 @@ void RemoteApi::motion_planning()
 	jaco.push();
 	jaco.follow_path(4);
 	jaco.open_hand();
+	jaco.return_to_start_position();
+	jaco.follow_path(5);
 }
 
