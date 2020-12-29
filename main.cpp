@@ -81,6 +81,7 @@ int main (int argc,char *argv[])
 					simulation.adjust_orientation();
 					simulation.preapre_motion();
 					simulation.motion_planning();
+					simulation.pass();
 					cout << "motion planning done"<<endl;
 			    }	
 			}

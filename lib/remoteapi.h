@@ -77,6 +77,7 @@ class RemoteApi
 		void preapre_motion();
 		void motion_planning();
 		void execute_motion();
+		void pass();
 };
 
 

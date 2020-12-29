@@ -173,10 +173,10 @@ void RemoteApi::path_following()
 											&outIntCount, &closeToTarget, &outFloatCount , &velocities, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);	
 		if (result == simx_return_ok && velocities != NULL)
 		{
-//			cout << "closeToTarget = "<< *closeToTarget << endl;
+			//cout << "closeToTarget = "<< *closeToTarget << endl;
 			vl = velocities[0];
 			vr = velocities[1];
-//			cout << "LeftV = " << vl <<", RightV = " << vr << endl;
+			//cout << "LeftV = " << vl <<", RightV = " << vr << endl;
 			//update velocities 
 			simxSetJointTargetVelocity(clientID, rightMotorHandle, vr, simx_opmode_oneshot);
 			simxSetJointTargetVelocity(clientID, leftMotorHandle, vl, simx_opmode_oneshot);
@@ -265,8 +265,20 @@ void RemoteApi::motion_planning()
 	jaco.follow_path(3);
 	jaco.push();
 	jaco.follow_path(4);
-	jaco.open_hand();
-	jaco.return_to_start_position();
-	jaco.follow_path(5);
+	//jaco.open_hand();
+	//jaco.return_to_start_position();
+	//jaco.follow_path(5);
 }
 
+void RemoteApi::pass()
+{
+	//just to test
+	float jointMaxPos = 1.4; 
+	simxSetJointPosition(clientID, doorJointHandle, jointMaxPos, simx_opmode_oneshot);	
+	if (simxGetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot_wait)!=simx_return_ok)
+		cout<< "ERROR: get goal position failed."<< endl;
+	goalPos[1]=goalPos[1]+1.2;
+	simxSetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot);
+
+
+}

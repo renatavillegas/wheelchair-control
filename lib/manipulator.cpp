@@ -294,7 +294,7 @@ void Manipulator::follow_path(int pathID)
 											0, NULL, &outFloatCount , &outFloat, NULL, NULL, NULL, NULL, simx_opmode_oneshot_wait);
 			if(result== simx_return_ok && outFloat != NULL)
 			{
-				for(int i =0;i<outFloatCount;i++)
+				for(int i =0;i<outFloatCount-1;i++)
 				{
 					configs[i]= outFloat[i];
 					//cout << "config " << i << " = " << configs[i] << endl;
