@@ -265,9 +265,9 @@ void RemoteApi::motion_planning()
 	jaco.follow_path(3);
 	jaco.push();
 	jaco.follow_path(4);
-	//jaco.open_hand();
-	//jaco.return_to_start_position();
-	//jaco.follow_path(5);
+	jaco.open_hand();
+	jaco.return_to_start_position();
+	jaco.follow_path(5);
 }
 
 void RemoteApi::pass()
@@ -277,8 +277,10 @@ void RemoteApi::pass()
 	simxSetJointPosition(clientID, doorJointHandle, jointMaxPos, simx_opmode_oneshot);	
 	if (simxGetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot_wait)!=simx_return_ok)
 		cout<< "ERROR: get goal position failed."<< endl;
-	goalPos[1]=goalPos[1]+1.2;
+	goalPos[1]=goalPos[1]+2.2;
+	goalPos[0]=goalPos[0]-0.1;
 	simxSetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot);
-
-
+	path_planning();
+	path_following();
+	adjust_orientation();
 }
