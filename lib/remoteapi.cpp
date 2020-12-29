@@ -266,11 +266,12 @@ void RemoteApi::motion_planning()
 	jaco.push();
 	jaco.follow_path(4);
 	jaco.open_hand();
-	jaco.return_to_start_position();
-	jaco.follow_path(5);
+	jaco.cross();
+	jaco.follow_path(6);
+
 }
 
-void RemoteApi::pass()
+void RemoteApi::cross()
 {
 	//just to test
 	float jointMaxPos = 1.4; 
@@ -283,4 +284,10 @@ void RemoteApi::pass()
 	path_planning();
 	path_following();
 	adjust_orientation();
+}
+
+void RemoteApi::return_to_initial_position()
+{
+	jaco.return_to_start_position();
+	jaco.follow_path(5);
 }
