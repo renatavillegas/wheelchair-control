@@ -274,7 +274,7 @@ void RemoteApi::motion_planning()
 void RemoteApi::cross()
 {
 	//just to test
-	float jointMaxPos = 1.4; 
+	float jointMaxPos = 1.57; 
 	simxSetJointPosition(clientID, doorJointHandle, jointMaxPos, simx_opmode_oneshot);	
 	if (simxGetObjectPosition(clientID, goalCameraDummyHandle, -1, goalPos, simx_opmode_oneshot_wait)!=simx_return_ok)
 		cout<< "ERROR: get goal position failed."<< endl;
